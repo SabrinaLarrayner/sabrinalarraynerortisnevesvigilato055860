@@ -1,0 +1,14 @@
+<div class="inline-flex bg-purple-50 p-1 rounded-[24px] border border-purple-100 shadow-sm">
+  @for (option of options; track option) {
+    <button 
+      type="button" 
+      (click)="select(option)" 
+      [ngClass]="{
+        'bg-white text-purple-700 shadow-md': value === option,
+        'text-purple-400 hover:text-purple-600': value !== option
+      }"
+      class="px-8 py-2.5 rounded-[20px] font-bold transition-all duration-300 ease-in-out text-sm md:text-base min-w-[120px]">
+      {{ option }}
+    </button>
+  }
+</div>

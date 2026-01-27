@@ -1,0 +1,13 @@
+<button (click)="handlePress()" [ngClass]="{
+  'bg-purple-600 text-white hover:bg-purple-700': variant === 'primary',
+  'border-2 border-purple-600 text-purple-600 hover:bg-purple-50': variant === 'outline'
+}"
+class="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold transition-all duration-200 active:scale-95 shadow-sm h-fit w-full">
+  <span>{{ label }}</span>
+
+  @if (showIcon) {
+    <mat-icon [ngClass]="variant === 'primary' ? 'text-white' : 'text-purple-600'">
+      {{ iconName }}
+    </mat-icon>
+  }
+</button>

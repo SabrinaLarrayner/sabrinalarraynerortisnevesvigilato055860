@@ -1,3 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import "tailwindcss";
+
+:root {
+  --purple-600-tailwind: #9333ea; 
+
+  --mdc-outlined-text-field-focus-outline-color: var(--purple-600-tailwind) !important;
+  --mdc-outlined-text-field-focus-label-text-color: var(--purple-600-tailwind) !important;
+  --mat-form-field-focus-line-color: var(--purple-600-tailwind) !important;
+}
+
+/* Aplicando na borda do Material */
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+.mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--purple-600-tailwind) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: var(--purple-600-tailwind) !important;
+}
