@@ -13,8 +13,16 @@ export class Button {
   @Input() variant: 'primary' | 'outline' = 'primary';  
   @Input() showIcon: boolean = false; 
   @Input() iconName: string = 'search'; 
+  
+  // Esta linha é a que resolve o erro NG8002
+  @Input() disabled: boolean = false; 
+
   @Output() onClick = new EventEmitter<void>();
+
   handlePress() {
-    this.onClick.emit();
+    // Adicione esta verificação para garantir que o clique não dispare se estiver desativado
+    if (!this.disabled) {
+      this.onClick.emit();
+    }
   }
 }

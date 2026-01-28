@@ -1,40 +1,32 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-// Interface para o que a API nos devolve (Listagem)
 export interface PetResponse {
   id: number;
   nome: string;
   raca: string;
   idade: number;
-  foto?: {
-    url: string;
-  };
+  foto?: { url: string; };
 }
 
-// Interface para o que nós enviamos para a API (Criação - os parâmetros do Swagger)
-// Baseado no PetRequestDto
-export interface PetRequest {
-  nome: string; // máx 100 caracteres
-  raca: string; // máx 100 caracteres
-  idade: number; // integer int32
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class PetsService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'https://pet-manager-api.geia.vip/v1/pets';
+  private API_URL = `${environment.api_url}/pets`;
 
-  // GET: Não precisa de parâmetros no body
-  listAll(): Observable<PetResponse[]> {
-    return this.http.get<PetResponse[]>(this.API_URL);
+  listAll(page: number = 0, size: number = 10, nome?: string, raca?: string): Observable<any> {
+    const fromObject: any = { page, size };
+    
+    if (nome) fromObject.nome = nome;
+    if (raca) fromObject.raca = raca;
+  
+    const params = new HttpParams({ fromObject });
+    return this.http.get<any>(this.API_URL, { params });
   }
 
-  // POST: Aqui é onde entram os parâmetros (nome, raca, idade)
-  create(petData: PetRequest): Observable<PetResponse> {
+  create(petData: any): Observable<PetResponse> {
     return this.http.post<PetResponse>(this.API_URL, petData);
   }
 }

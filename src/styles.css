@@ -2,13 +2,12 @@
 
 :root {
   --purple-600-tailwind: #9333ea; 
-
   --mdc-outlined-text-field-focus-outline-color: var(--purple-600-tailwind) !important;
   --mdc-outlined-text-field-focus-label-text-color: var(--purple-600-tailwind) !important;
   --mat-form-field-focus-line-color: var(--purple-600-tailwind) !important;
 }
 
-/* Aplicando na borda do Material */
+/* Estilos do Material permanecem aqui */
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
@@ -17,4 +16,16 @@
 
 .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
   color: var(--purple-600-tailwind) !important;
+}
+
+/* O bloco @theme só pode ter keyframes ou variáveis */
+@theme {
+  @keyframes pata-out {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)); opacity: 0; }
+  }
+}
+
+.animate-pata {
+  animation: pata-out 6s infinite ease-in-out;
 }

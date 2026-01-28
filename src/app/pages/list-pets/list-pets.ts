@@ -1,32 +1,95 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+
 import { InputField } from '../../components/input-field/input-field';
 import { Button } from '../../components/button/button';
 import { Card } from '../../components/card/card';
 import { LayoutToggleView } from '../../layout/layout-toggle-view/layout-toggle-view';
-import { PetsService, PetResponse } from '../../service/pets'; 
+import { PetResponse, PetsService } from '../../service/pets';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-pets',
-  standalone: true, 
-  imports: [MatIconModule, InputField, Button, Card, LayoutToggleView],
+  standalone: true,
+  imports: [
+    MatIconModule, 
+    MatPaginatorModule, 
+    ReactiveFormsModule, 
+    InputField, 
+    Button, 
+    Card, 
+    LayoutToggleView
+  ],
   templateUrl: './list-pets.html',
 })
-export class ListPets implements OnInit {
+export class ListPets implements OnInit, OnDestroy {
   private petService = inject(PetsService);
-  public pets: PetResponse[] = [];
-  ngOnInit(): void {
-    this.carregarPets();
+  private cdr = inject(ChangeDetectorRef);
+  private destroy$ = new Subject<void>();
+  private router = inject(Router);
+  pets: PetResponse[] = [];
+  totalPets: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  searchControl = new FormControl('');
+
+  public navigateToCreate(): void {
+    this.router.navigate(['/create-pet']); // Certifique-se que este caminho coincide com suas rotas
   }
-  carregarPets(): void {
-    this.petService.listAll().subscribe({
-      next: (dados) => {
-        this.pets = dados;
-        console.log('Pets carregados com sucesso:', dados);
-      },
-      error: (err) => {
-        console.error('Erro ao conectar com a API:', err);
-      }
+
+  ngOnInit(): void {
+    this.dataPets();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    ).subscribe(() => {
+      this.currentPage = 0;
+      this.dataPets();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  dataPets(): void {
+    const search = this.searchControl.value?.trim() || '';
+    this.petService.listAll(this.currentPage, this.pageSize, search)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (dados: any) => {
+          if (search !== '' && (!dados.content || dados.content.length === 0)) {
+            this.fetchByRaca(search);
+          } else {
+            this.renderPets(dados);
+          }
+        },
+        error: (err) => console.error('Erro na busca por nome:', err)
+      });
+  }
+  private fetchByRaca(search: string): void {
+    this.petService.listAll(this.currentPage, this.pageSize, undefined, search)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (dados: any) => this.renderPets(dados),
+        error: (err) => console.error('Erro na busca por raça:', err)
+      });
+  }
+  private renderPets(dados: any): void {
+    this.pets = dados?.content || [];
+    this.totalPets = dados?.total || 0;
+    this.cdr.detectChanges();
+  }
+  handlePageEvent(e: PageEvent): void {
+    this.currentPage = e.pageIndex;
+    this.pageSize = e.pageSize;
+    this.dataPets();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

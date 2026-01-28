@@ -1,12 +1,18 @@
-<button (click)="handlePress()" [ngClass]="{
-  'bg-purple-600 text-white hover:bg-purple-700': variant === 'primary',
-  'border-2 border-purple-600 text-purple-600 hover:bg-purple-50': variant === 'outline'
-}"
-class="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold transition-all duration-200 active:scale-95 shadow-sm h-fit w-full">
+<button 
+  (click)="handlePress()" 
+  [disabled]="disabled"
+  [ngClass]="{
+    'bg-purple-600 text-white hover:bg-purple-700': variant === 'primary' && !disabled,
+    'border-2 border-purple-600 text-purple-600 hover:bg-purple-50': variant === 'outline' && !disabled,
+    'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none': disabled && variant === 'primary',
+    'border-2 border-gray-300 text-gray-400 cursor-not-allowed shadow-none': disabled && variant === 'outline'
+  }"
+  class="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold transition-all duration-200 active:scale-95 disabled:scale-100 shadow-sm h-fit w-full">
+  
   <span>{{ label }}</span>
 
   @if (showIcon) {
-    <mat-icon [ngClass]="variant === 'primary' ? 'text-white' : 'text-purple-600'">
+    <mat-icon [ngClass]="disabled ? 'text-gray-400' : (variant === 'primary' ? 'text-white' : 'text-purple-600')">
       {{ iconName }}
     </mat-icon>
   }
