@@ -3,14 +3,17 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authTokenInterceptor } from './service/auth-token';
+import { authRefreshInterceptor } from './service/auth-refresh-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    // Configuração com o interceptor registrado
     provideHttpClient(
-      withInterceptors([authTokenInterceptor])
+      withInterceptors([
+        authTokenInterceptor,    
+        authRefreshInterceptor
+      ])
     )
   ]
 };
