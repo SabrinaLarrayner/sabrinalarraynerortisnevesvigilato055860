@@ -19,7 +19,7 @@
         }
 
         <div class="absolute top-4 right-4 flex gap-2">
-          <app-button label="Editar"  (click)="goEdit()" variant="primary"></app-button>
+          <app-button label="Editar" (click)="goEdit()" variant="primary"></app-button>
           <app-button (click)="showModalDelete()" label="Excluir" variant="primary"></app-button>
         </div>
       </div>
@@ -35,8 +35,12 @@
             </div>
           </div>
           <div class="text-center">
-            <span class="text-6xl font-black text-purple-600 leading-none">{{ pet.idade }}</span>
-            <p class="text-gray-400 font-bold uppercase text-xs">anos</p>
+            <span class="text-6xl font-black text-purple-600 leading-none">
+              {{ pet.idade ?? '-' }}
+            </span>
+            <p class="text-gray-400 font-bold uppercase text-xs">
+              {{ yearsPlural() }}
+            </p>
           </div>
         </div>
         <div class="flex flex-col gap-4">

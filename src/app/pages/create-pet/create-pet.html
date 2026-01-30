@@ -12,7 +12,6 @@
             } @else {
             <mat-icon fontIcon="photo_camera" class="text-purple-300 text-4xl h-10 w-10"></mat-icon>
             }
-
             <input #fileInput type="file" class="hidden" accept="image/*" (change)="onFileSelected($event)">
           </div>
 
@@ -25,18 +24,15 @@
           </div>
           }
         </div>
-
         <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
           <app-input-field label="Nome" placeholder="Nome do pet" [control]="nomeControl">
           </app-input-field>
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <app-input-field label="Idade (anos)" type="number" placeholder="0" [control]="idadeControl">
+            <app-input-field [label]="yearsPlural()" type="number" min="0" [control]="idadeControl">
             </app-input-field>
             <app-input-field label="Raça" placeholder="Raça do pet" [control]="racaControl">
             </app-input-field>
           </div>
-
           <div class="flex flex-col md:flex-row gap-4 pt-4">
             <app-button label="Cancelar" variant="outline" class="flex-1" (click)="cancelar()">
             </app-button>

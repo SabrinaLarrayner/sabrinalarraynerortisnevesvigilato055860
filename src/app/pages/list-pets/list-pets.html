@@ -7,7 +7,8 @@
       </app-input-field>
     </div>
     <div class="w-full -mt-5 md:w-auto">
-      <app-button label="Adicionar Pets" [showIcon]="true" iconName="add" class="w-full" (click)="navigateToCreate()"></app-button>
+      <app-button label="Adicionar Pets" [showIcon]="true" iconName="add" class="w-full"
+        (click)="navigateToCreate()"></app-button>
     </div>
   </div>
 
@@ -26,20 +27,19 @@
           <img [src]="pet.foto?.url || 'https://via.placeholder.com/400x300?text=Sem+Foto'" [alt]="pet.nome"
             class="w-full h-full object-cover" />
         </div>
-
         <div class="flex flex-col gap-1 text-purple-900 px-1">
           <h2 class="text-lg font-black truncate">{{ pet.nome }}</h2>
           <p class="text-gray-600 text-sm font-medium truncate">Raça: {{ pet.raca }}</p>
-          <p class="text-gray-400 text-xs">Idade: {{ pet.idade }} anos</p>
+
+          <p class="text-gray-400 text-xs">
+            Idade: {{ pet.idade }} {{ yearsPlural(pet.idade) }}
+          </p>
         </div>
 
         <div class="flex flex-col gap-4">
-          <app-button 
-          label="Detalhes" 
-          variant="outline" 
-          class="w-full"
-          (click)="detailsPet(pet.id)">
-        </app-button>        </div>
+          <app-button label="Detalhes" variant="outline" class="w-full" (click)="detailsPet(pet.id)">
+          </app-button>
+        </div>
       </div>
     </app-card>
     } @empty {

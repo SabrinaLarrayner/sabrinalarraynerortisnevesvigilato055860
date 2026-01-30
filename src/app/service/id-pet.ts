@@ -27,7 +27,7 @@ export interface PetDetailResponse {
   id: number;
   nome: string;
   raca: string;
-  idade: number;
+  idade?: number;
   foto?: FotoResponse;
   tutores: TutorResponse[];
 }

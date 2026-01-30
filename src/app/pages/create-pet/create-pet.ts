@@ -25,10 +25,11 @@ export class CreatePet {
   private cdr = inject(ChangeDetectorRef);
   selectedFile: File | null = null;
   photoPreview: string | null = null;
+  years: number | null = null
 
   form: FormGroup = this.fb.group({
     nome: ['', [Validators.required]],
-    idade: [null, [Validators.required, Validators.min(0)]],
+    idade: [null, [Validators.required, Validators.min(0)]], 
     raca: ['', [Validators.required]],
   });
 
@@ -41,7 +42,6 @@ export class CreatePet {
     if (file) {
       this.selectedFile = file;
       const reader = new FileReader();
-
       reader.onload = () => {
         this.photoPreview = reader.result as string;
         this.cdr.detectChanges(); 
@@ -77,6 +77,11 @@ export class CreatePet {
     }
   }
 
+  yearsPlural() {
+    const valor = this.form.get('idade')?.value;
+    return valor > 1 ? 'Idade (anos)' : 'Idade (ano)';
+  }
+  
   cancelar() {
     this.router.navigate(['/list-pets']);
   }

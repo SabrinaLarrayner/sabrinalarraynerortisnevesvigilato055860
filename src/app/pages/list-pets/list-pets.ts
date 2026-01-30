@@ -55,7 +55,6 @@ export class ListPets implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  // Navegação
   public navigateToCreate(): void {
     this.router.navigate(['/create-pet']);
   }
@@ -93,6 +92,10 @@ export class ListPets implements OnInit, OnDestroy {
     this.pets = dados?.content || [];  
     this.totalPets = dados?.total || 0; 
     this.cdr.detectChanges();
+  }
+
+  yearsPlural(idade: number): string {
+    return idade > 1 ? 'anos' : 'ano';
   }
 
   handlePageEvent(e: PageEvent): void {

@@ -26,7 +26,6 @@ export class DetailsPet implements OnInit {
   public showDeleteModal = false; 
 
   ngOnInit(): void {
-    // Captura o ID da rota
     const idParam = this.route.snapshot.paramMap.get('id');
     const id = idParam ? Number(idParam) : null;
 
@@ -63,13 +62,17 @@ export class DetailsPet implements OnInit {
 
   goEdit(): void {
     if (this.pet?.id) {
-      // Passamos o ID real do pet para a rota
       this.router.navigate(['/details-pet', this.pet.id, 'edit']);
     }
   }
 
   fecharModalExclusao(): void {
     this.showDeleteModal = false;
+  }
+
+  yearsPlural(): string {
+    const valor = this.pet?.idade ?? 0;
+    return valor > 1 ? 'anos' : 'ano';
   }
 
   deletePet(): void {
