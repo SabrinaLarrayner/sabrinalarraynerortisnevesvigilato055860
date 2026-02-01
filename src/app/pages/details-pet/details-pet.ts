@@ -1,12 +1,12 @@
-import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { Subject } from 'rxjs';
 
-import { IdPet, PetDetailResponse } from '../../service/id-pet';
-import { IdPetDelete } from '../../service/id-pet-delete'; 
 import { Button } from '../../components/button/button';
 import { Card } from '../../components/card/card';
+import { PetFacade } from '../../service/pet/pet.facade';
 
 @Component({
   selector: 'app-details-pet',
@@ -14,83 +14,57 @@ import { Card } from '../../components/card/card';
   imports: [CommonModule, MatIconModule, Button, Card],
   templateUrl: './details-pet.html',
 })
-export class DetailsPet implements OnInit {
+export class DetailsPet implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private idPetService = inject(IdPet);
-  private idPetDeleteService = inject(IdPetDelete); 
-  private cdr = inject(ChangeDetectorRef);
-
-  public pet?: PetDetailResponse;
-  public loading = true;
-  public showDeleteModal = false; 
+  public facade = inject(PetFacade);
+  
+  public showDeleteModal = false;
 
   ngOnInit(): void {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    const id = idParam ? Number(idParam) : null;
-
+    const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      this.getPetDetails(id);
+      this.facade.getById(id);
     } else {
       this.back();
     }
   }
 
-  private getPetDetails(id: number): void {
-    this.loading = true;
-    this.idPetService.execute(id).subscribe({
-      next: (data) => {
-        this.pet = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Erro ao carregar detalhes:', err);
-        this.loading = false;
-        this.cdr.detectChanges();
-      }
-    });
+  ngOnDestroy(): void {
+    this.facade.clearState();
   }
 
   back(): void {
     this.router.navigate(['/list-pets']);
   }
 
-  showModalDelete(): void {
-    this.showDeleteModal = true;
+  goEdit(id: number): void {
+    this.router.navigate(['/details-pet', id, 'edit']);
   }
 
-  goEdit(): void {
-    if (this.pet?.id) {
-      this.router.navigate(['/details-pet', this.pet.id, 'edit']);
-    }
+  toggleDeleteModal(show: boolean): void {
+    this.showDeleteModal = show;
+  }
+  
+  goToTutorDetails(id: number): void {
+    this.router.navigate(['/details-tutor', id]);
   }
 
-  fecharModalExclusao(): void {
-    this.showDeleteModal = false;
+  confirmDelete(id: number): void {
+    if (!id) return;
+    this.facade.delete(id).subscribe({
+      next: () => {
+        this.toggleDeleteModal(false);
+        this.back();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Erro ao excluir o pet.');
+      }
+    });
   }
 
-  yearsPlural(): string {
-    const valor = this.pet?.idade ?? 0;
-    return valor > 1 ? 'anos' : 'ano';
-  }
-
-  deletePet(): void {
-    if (this.pet && this.pet.id) {
-      this.loading = true; 
-      this.showDeleteModal = false;
-
-      this.idPetDeleteService.execute(this.pet.id).subscribe({
-        next: () => {
-          this.back();
-        },
-        error: (err) => {
-          console.error('Erro ao excluir:', err);
-          this.loading = false;
-          this.cdr.detectChanges();
-          alert('Erro ao excluir o pet. Verifique se o ID está correto ou se você tem permissão.');
-        }
-      });
-    }
+  getYearsLabel(age: number): string {
+    return age > 1 ? 'anos' : 'ano';
   }
 }

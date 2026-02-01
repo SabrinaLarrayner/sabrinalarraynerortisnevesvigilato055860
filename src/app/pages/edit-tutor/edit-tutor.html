@@ -1,0 +1,77 @@
+<div class="p-6 max-w-5xl mx-auto">
+  <button (click)="back()" class="flex items-center gap-2 text-gray-500 mb-6 hover:text-purple-600 transition-colors">
+    <mat-icon>arrow_back</mat-icon>
+    <span class="font-medium cursor-pointer">Voltar para detalhes</span>
+  </button>
+
+  @if (facade.loading$ | async) {
+  <div class="flex flex-col items-center justify-center py-20 text-purple-600">
+    <p class="animate-pulse font-bold">Carregando dados do tutor...</p>
+  </div>
+  } @else {
+  <div class="flex flex-col w-full animate-in fade-in duration-500">
+
+    <div class="relative h-64 w-full bg-purple-100 rounded-[32px] overflow-hidden shadow-sm mb-10">
+      @if (facade.tutorSelected$ | async; as tutor) {
+      <img [src]="tutor.foto?.url || 'assets/placeholder-tutor.png'" class="w-full h-full object-cover opacity-60">
+
+      <div class="absolute inset-0 bg-gradient-to-t from-purple-900/60 to-transparent"></div>
+
+      <div class="absolute bottom-8 left-10 text-white">
+        <h1 class="text-4xl font-black drop-shadow-md">Editando Perfil</h1>
+      </div>
+
+      <div class="absolute top-6 right-8 flex gap-3">
+        <input type="file" #fileInput class="hidden" accept="image/*" (change)="onFileSelected($event)">
+
+        <app-button label="Trocar imagem" (click)="triggerFileInput(fileInput)"></app-button>
+
+        @if (tutor.foto?.url) {
+        <app-button label="Excluir imagem"
+          (click)="showDeleteImgModal = true"></app-button>
+        }
+      </div>
+      }
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="px-4 flex flex-col gap-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <app-input-field label="Nome do Tutor*" [control]="getControl('nome')"></app-input-field>
+        <app-input-field label="E-mail*" [control]="getControl('email')"></app-input-field>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <app-input-field label="Telefone*" [control]="getControl('telefone')"></app-input-field>
+        <app-input-field label="CPF*" [control]="getControl('cpf')"></app-input-field>
+      </div>
+
+      <app-input-field label="Endereço Completo*" [control]="getControl('endereco')"></app-input-field>
+
+      <div class="flex justify-end mt-4">
+        <app-button type="submit" label="Confirmar Atualização" [disabled]="form.invalid || !!(facade.loading$ | async)"
+          class="min-w-[280px]">
+        </app-button>
+      </div>
+    </form>
+  </div>
+
+  @if (showDeleteImgModal && (facade.tutorSelected$ | async); as tutor) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="showDeleteImgModal = false"></div>
+    <div
+      class="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col gap-6 text-center animate-in zoom-in duration-200">
+      <div class="mx-auto text-red-500 p-4 rounded-full bg-red-50 w-fit">
+        <mat-icon class="text-4xl h-10 w-10">delete_forever</mat-icon>
+      </div>
+      <h2 class="text-2xl font-black text-purple-900">Remover Foto?</h2>
+      <p class="text-gray-500">Deseja remover a foto de perfil de <b>{{ tutor.nome }}</b>?</p>
+      <div class="flex flex-col gap-3">
+        <app-button label="Sim, remover" (click)="confirmDeleteImage(tutor.foto.id)"></app-button>
+        <app-button label="Cancelar" class="bg-gray-100 text-gray-700 border-none"
+          (click)="showDeleteImgModal = false"></app-button>
+      </div>
+    </div>
+  </div>
+  }
+  }
+</div>

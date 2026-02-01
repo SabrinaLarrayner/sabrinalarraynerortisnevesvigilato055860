@@ -1,0 +1,158 @@
+<div class="p-6 max-w-4xl mx-auto">
+  <button (click)="back()" class="flex items-center gap-2 text-gray-500 mb-6 hover:text-purple-600 transition-colors">
+    <mat-icon>arrow_back</mat-icon>
+    <span class="font-medium cursor-pointer">Voltar para lista</span>
+  </button>
+
+  @if (facade.loading$ | async) {
+  <div class="flex flex-col items-center justify-center py-20 text-purple-600">
+    <p class="animate-pulse font-medium">Carregando detalhes do tutor...</p>
+  </div>
+  } @else if (facade.tutorSelected$ | async; as tutor) {
+
+  <div
+    class="relative bg-gradient-to-r from-purple-600 to-purple-400 rounded-3xl p-8 text-white mb-8 shadow-lg overflow-hidden">
+    <div class="absolute top-6 right-6 flex gap-2">
+      <app-button label="Editar" variant="primary" (click)="goEditTutor(tutor.id)"></app-button>
+      <app-button (click)="toggleDeleteModal(true)" label="Excluir" variant="primary"></app-button>
+    </div>
+
+    <div class="flex items-center gap-6">
+      <div
+        class="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-white/30 shadow-inner">
+        @if (tutor.foto?.url) {
+        <img [src]="tutor.foto.url" class="w-full h-full object-cover">
+        } @else {
+        <span class="text-4xl font-bold uppercase">{{ (tutor.nome || '?').charAt(0) }}</span>
+        }
+      </div>
+
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold tracking-tight pr-40">{{ tutor.nome }}</h1>
+        <div class="flex flex-col gap-1 mt-3 text-purple-50">
+          <span class="flex items-center gap-2 text-sm font-medium">
+            <mat-icon class="text-[18px] h-5 w-5">phone</mat-icon> {{ formatPhone(tutor.telefone) }}
+          </span>
+          <span class="flex items-center gap-2 text-sm font-medium">
+            <mat-icon class="text-[18px] h-5 w-5">location_on</mat-icon> {{ tutor.endereco || 'Endereço não informado'
+            }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold text-gray-800">Pets Vinculados</h2>
+    <app-button label="Vincular novo pet" (click)="openLinkModal()" variant="primary"></app-button>
+  </div>
+
+  <div class="grid gap-4">
+    @for (pet of tutor.pets; track pet.id) {
+    <app-card class="hover:shadow-md transition-all group">
+      <div class="flex items-center justify-between p-2">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center overflow-hidden border border-purple-100">
+            @if (pet.foto?.url) {
+            <img [src]="pet.foto.url" class="w-full h-full object-cover">
+            } @else {
+            <mat-icon class="text-purple-200">pets</mat-icon>
+            }
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-800 group-hover:text-purple-600 transition-colors">{{ pet.nome }}</h3>
+            <p class="text-sm text-gray-500">{{ pet.raca }} • {{ pet.idade }} {{ pet.idade === 1 ? 'ano' : 'anos' }}</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button (click)="openUnlinkModal(pet)" title="Desvincular pet"
+            class="text-red-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50">
+            <mat-icon>link_off</mat-icon>
+          </button>
+        </div>
+      </div>
+    </app-card>
+    } @empty {
+    <div class="text-center py-16 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+      <mat-icon class="text-gray-300 text-5xl h-12 w-12 mb-2">pets</mat-icon>
+      <p class="text-gray-400">Este tutor ainda não possui pets vinculados.</p>
+    </div>
+    }
+  </div>
+
+  @if (showLinkPetModal) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="showLinkPetModal = false"></div>
+    <div
+      class="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl flex flex-col gap-6 animate-in zoom-in duration-200">
+      <h2 class="text-2xl font-black text-purple-900 leading-tight text-center">Vincular Pet</h2>
+
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-bold text-gray-600 ml-1">Selecione um pet disponível:</label>
+        <select [(ngModel)]="selectedPetId"
+          class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 outline-none transition-all appearance-none cursor-pointer">
+          <option [ngValue]="null" disabled>Escolha um pet...</option>
+          @for (p of petFacade.pets$ | async; track p.id) {
+          <option [value]="p.id">{{ p.nome }} ({{ p.raca }})</option>
+          }
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <app-button (click)="confirmLink()" label="Confirmar Vínculo" [disabled]="!selectedPetId"
+          class="w-full"></app-button>
+        <app-button (click)="showLinkPetModal = false" label="Cancelar" variant="outline" class="w-full"></app-button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (showUnlinkModal) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="showUnlinkModal = false"></div>
+    <div
+      class="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col gap-6 text-center animate-in zoom-in duration-200">
+      <div class="mx-auto bg-orange-50 text-orange-500 p-4 rounded-full w-fit">
+        <mat-icon class="text-4xl h-10 w-10 font-bold">link_off</mat-icon>
+      </div>
+      <h2 class="text-2xl font-black text-purple-900 leading-tight">Remover Vínculo?</h2>
+      <p class="text-gray-500 text-sm">
+        Deseja desvincular o pet <b>{{ petToUnlink?.nome }}</b> deste tutor?
+      </p>
+      <div class="flex flex-col gap-3">
+        <app-button (click)="confirmUnlink()" label="Sim, desvincular" class="w-full"></app-button>
+        <app-button (click)="showUnlinkModal = false" label="Cancelar" variant="outline" class="w-full"></app-button>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (showDeleteModal) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="toggleDeleteModal(false)"></div>
+
+    <div
+      class="relative bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col gap-6 animate-in zoom-in duration-200 text-center">
+      <div class="mx-auto bg-red-50 text-red-500 p-4 rounded-full w-fit">
+        <mat-icon class="text-4xl h-10 w-10">delete_forever</mat-icon>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-black text-purple-900 leading-tight">Excluir Tutor?</h2>
+        <p class="text-gray-500 mt-2 text-sm">
+          Você está prestes a excluir o registro de <b>{{ tutor.nome }}</b>.
+          Isso removerá permanentemente todos os dados e vínculos.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <app-button (click)="confirmDelete(tutor.id)" label="Sim, excluir agora" class="w-full"></app-button>
+        <app-button (click)="toggleDeleteModal(false)" label="Cancelar" variant="outline" class="w-full"></app-button>
+      </div>
+    </div>
+  </div>
+  }
+  }
+</div>

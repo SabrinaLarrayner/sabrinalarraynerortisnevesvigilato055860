@@ -3,13 +3,11 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } 
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+
 import { Button } from '../../components/button/button';
 import { InputField } from '../../components/input-field/input-field';
 import { Card } from '../../components/card/card';
-import { CreatePets } from '../../service/create-pets';
-import { IdPhotoPets } from '../../service/id-photo-pets';
+import { PetFacade } from '../../service/pet/pet.facade';
 
 @Component({
   selector: 'app-create-pet',
@@ -19,13 +17,12 @@ import { IdPhotoPets } from '../../service/id-photo-pets';
 })
 export class CreatePet {
   private fb = inject(FormBuilder);
-  private createPetsService = inject(CreatePets);
-  private idPhotoPetsService = inject(IdPhotoPets);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
+  public facade = inject(PetFacade); // public para o loading$ no HTML
+
   selectedFile: File | null = null;
   photoPreview: string | null = null;
-  years: number | null = null
 
   form: FormGroup = this.fb.group({
     nome: ['', [Validators.required]],
@@ -46,7 +43,6 @@ export class CreatePet {
         this.photoPreview = reader.result as string;
         this.cdr.detectChanges(); 
       };
-
       reader.readAsDataURL(file);
     }
   }
@@ -54,35 +50,23 @@ export class CreatePet {
   removePhoto() {
     this.selectedFile = null;
     this.photoPreview = null;
-    console.log('removido')
   } 
 
   onSubmit() {
     if (this.form.valid) {
-      const payload = this.form.getRawValue();
-
-      this.createPetsService.execute(payload).pipe(
-        switchMap((createPet) => {
-          if (this.selectedFile) {
-            return this.idPhotoPetsService.execute(createPet.id, this.selectedFile);
-          }
-          return of(null);
-        })
-      ).subscribe({
-        next: () => {
-          this.router.navigate(['/list-pets']);
-        },
-        error: (err) => console.error('Erro no cadastro:', err)
+      this.facade.createWithPhoto(this.form.value, this.selectedFile).subscribe({
+        next: () => this.router.navigate(['/list-pets']),
+        error: (err) => console.error('Error creating pet:', err)
       });
     }
   }
 
-  yearsPlural() {
-    const valor = this.form.get('idade')?.value;
-    return valor > 1 ? 'Idade (anos)' : 'Idade (ano)';
+  getYearsLabel(): string {
+    const value = this.form.get('idade')?.value;
+    return value > 1 ? 'Idade (anos)' : 'Idade (ano)';
   }
   
-  cancelar() {
+  cancel(): void {
     this.router.navigate(['/list-pets']);
   }
 }

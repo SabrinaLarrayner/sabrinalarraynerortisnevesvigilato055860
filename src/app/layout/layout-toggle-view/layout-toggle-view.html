@@ -7,7 +7,10 @@
       </h1>
     </div>
     <div class="w-full md:w-auto flex justify-center">
-      <app-input-segmented-control [options]="['Pets', 'Tutores']" [(value)]="isSelected">
+      <app-input-segmented-control 
+        [options]="['Pets', 'Tutores']" 
+        [value]="isSelected"
+        (valueChange)="onValueChange($event)">
       </app-input-segmented-control>
     </div>
   </div>

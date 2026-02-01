@@ -1,16 +1,24 @@
 <mat-form-field appearance="outline" class="w-full" color="primary">
   <mat-label>{{ label }}</mat-label>
-  
+
   @if (icon) {
-    <mat-icon matPrefix class="mr-2">{{ icon }}</mat-icon>
+  <mat-icon matPrefix class="mr-2">{{ icon }}</mat-icon>
   }
 
-  <input 
-    matInput 
-    [type]="type" 
-    [placeholder]="placeholder" 
-    [formControl]="control"
-    (focus)="focus.emit()" 
-    (blur)="blur.emit()"
-  />
+  <input matInput [type]="type" [placeholder]="placeholder" [formControl]="control" [mask]="mask"
+    [dropSpecialCharacters]="dropSpecialCharacters" (focus)="focus.emit()" (blur)="blur.emit()" />
+
+  @if (control.invalid && (control.dirty || control.touched)) {
+  <mat-error>
+    @if (control.hasError('required')) {
+    Este campo é obrigatório
+    } @else if (control.hasError('email')) {
+    E-mail inválido
+    } @else if (control.hasError('invalidCpf')) {
+    CPF inválido ou inexistente
+    } @else if (mask && control.errors?.['mask']) {
+    Formato incompleto
+    }
+  </mat-error>
+  }
 </mat-form-field>

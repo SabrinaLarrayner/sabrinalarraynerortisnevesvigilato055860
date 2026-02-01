@@ -5,6 +5,10 @@ import { Login } from './pages/login/login';
 import { CreatePet } from './pages/create-pet/create-pet';
 import { DetailsPet } from './pages/details-pet/details-pet';
 import { EditPet } from './pages/edit-pet/edit-pet';
+import { ListTutors } from './pages/list-tutors/list-tutors';
+import { CreateTutor } from './pages/create-tutor/create-tutor';
+import { DetailsTutor } from './pages/details-tutor/details-tutor';
+import { EditTutor } from './pages/edit-tutor/edit-tutor';
 
 export const routes: Routes = [
   {
@@ -29,6 +33,22 @@ export const routes: Routes = [
       {
         path: 'details-pet/:id/edit',
         component: EditPet
+      },
+      {
+        path: 'list-tutors',
+        component: ListTutors
+      },
+      {
+        path: 'create-tutor',
+        component: CreateTutor
+      },
+      {
+        path: 'details-tutor/:id',
+        component: DetailsTutor
+      },
+      {
+        path: 'details-tutor/:id/edit',
+        component: EditTutor
       },
       {
         path: '',

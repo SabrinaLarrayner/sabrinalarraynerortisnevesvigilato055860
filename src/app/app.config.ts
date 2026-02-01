@@ -2,8 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authTokenInterceptor } from './service/auth-token';
-import { authRefreshInterceptor } from './service/auth-refresh-interceptor';
+
+import { provideNgxMask } from 'ngx-mask';
+import { authTokenInterceptor } from './service/auth/auth-token-interceptor';
+import { authRefreshInterceptor } from './service/auth/auth-refresh-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +16,7 @@ export const appConfig: ApplicationConfig = {
         authTokenInterceptor,    
         authRefreshInterceptor
       ])
-    )
+    ),
+    provideNgxMask()
   ]
 };

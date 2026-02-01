@@ -40,9 +40,12 @@
         </div>
 
         <div class="w-full mt-2 sm:mt-4">
-          <app-button label="Entrar" variant="primary" class="w-full py-3 text-base sm:text-lg font-bold"
-            (click)="onSubmit()" [disabled]="loginForm.invalid">
+          @if ({ loading: (facade.loading$ | async) }; as state) {
+          <app-button [label]="state.loading ? 'Entrando...' : 'Entrar'" variant="primary"
+            class="w-full py-3 text-base sm:text-lg font-bold" (click)="onSubmit()"
+            [disabled]="loginForm.invalid || !!state.loading">
           </app-button>
+          }
         </div>
 
       </div>

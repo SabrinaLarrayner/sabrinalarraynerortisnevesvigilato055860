@@ -1,0 +1,21 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class TutorAndPet {
+  private http = inject(HttpClient);
+  private readonly API = environment.api_url;
+
+
+  linkPetToTutor(tutorId: number, petId: number): Observable<void> {
+
+    return this.http.post<void>(
+      `${this.API}tutores/${tutorId}/pets/${petId}`, 
+      {}
+    );
+  }
+}
