@@ -2,8 +2,6 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { Subject } from 'rxjs';
-
 import { Button } from '../../components/button/button';
 import { Card } from '../../components/card/card';
 import { PetFacade } from '../../service/pet/pet.facade';

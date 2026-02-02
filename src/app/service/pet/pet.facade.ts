@@ -20,14 +20,9 @@ export class PetFacade {
   private deleteService = inject(IdPetDelete);
   private editService = inject(PetEdit);
   private deleteImgService = inject(PetDeleteImg);
-
-  // --- ESTADO ---
   private petsListSubject = new BehaviorSubject<any>(null);
   readonly petsList$ = this.petsListSubject.asObservable();
 
-  /** * SOLUÇÃO DO ERRO: O seu HTML usa 'pets$'. 
-   * Criamos este observable que extrai apenas o array 'content' do petsList$
-   */
   readonly pets$ = this.petsList$.pipe(
     map(res => res?.content || [])
   );
@@ -38,11 +33,7 @@ export class PetFacade {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   readonly loading$ = this.loadingSubject.asObservable();
 
-  // --- MÉTODOS DE BUSCA ---
 
-  /** * ADICIONADO: O componente DetailsTutor chama getAll()
-   * Ele apenas redireciona para o listAll com um tamanho grande para o select
-   */
   getAll(): void {
     this.listAll(0, 100); 
   }
@@ -85,7 +76,6 @@ export class PetFacade {
     });
   }
 
-  // --- MÉTODOS DE ESCRITA (CREATE/UPDATE/DELETE) ---
   createWithPhoto(payload: any, file: File | null): Observable<any> {
     this.loadingSubject.next(true);
     return this.createService.execute(payload).pipe(
@@ -126,7 +116,6 @@ export class PetFacade {
     );
   }
 
-  // --- GESTÃO DE IMAGENS ---
   uploadPhoto(id: number, file: File): Observable<any> {
     this.loadingSubject.next(true);
     return this.photoService.execute(id, file).pipe(

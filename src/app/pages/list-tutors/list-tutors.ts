@@ -11,19 +11,21 @@ import { Button } from '../../components/button/button';
 import { Card } from '../../components/card/card';
 import { LayoutToggleView } from '../../layout/layout-toggle-view/layout-toggle-view';
 import { TutorFacade } from '../../service/tutor/tutor.facade';
+import { FormatPipe } from '../../utils/regex/regex';
 
 @Component({
   selector: 'app-list-tutors',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatIconModule, 
-    MatPaginatorModule, 
-    ReactiveFormsModule, 
-    InputField, 
-    Button, 
-    Card, 
-    LayoutToggleView
+    CommonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    InputField,
+    Button,
+    Card,
+    LayoutToggleView,
+    FormatPipe
   ],
   templateUrl: './list-tutors.html',
 })

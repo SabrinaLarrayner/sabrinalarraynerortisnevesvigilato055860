@@ -17,7 +17,7 @@ export class TutorFacade {
   private createService = inject(CreateTutorService);
   private photoService = inject(IdPhotoTutorsService);
   private deleteService = inject(DeleteTutor);
-  private editService = inject(EditTutorService); // Injetando o serviço de edição
+  private editService = inject(EditTutorService);
 
   private tutorSelectedSubject = new BehaviorSubject<TutorDetailResponse | null>(null);
   readonly tutorSelected$ = this.tutorSelectedSubject.asObservable();
@@ -73,16 +73,11 @@ export class TutorFacade {
     );
   }
 
-  /**
-   * Atualiza os dados de um tutor e sincroniza o estado
-   */
   update(id: number, payload: TutorUpdatePayload): Observable<any> {
     this.loadingSubject.next(true);
     return this.editService.update(id, payload).pipe(
       tap((updatedTutor) => {
-        // Atualiza o tutor selecionado no estado com a resposta da API
         this.tutorSelectedSubject.next(updatedTutor);
-        // Opcional: Atualiza a lista geral para refletir as mudanças
         this.listAll(); 
       }),
       finalize(() => this.loadingSubject.next(false))

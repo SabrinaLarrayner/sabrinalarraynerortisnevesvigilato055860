@@ -7,7 +7,6 @@
   --mat-form-field-focus-line-color: var(--purple-600-tailwind) !important;
 }
 
-/* Estilos do Material permanecem aqui */
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
 .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
@@ -18,7 +17,6 @@
   color: var(--purple-600-tailwind) !important;
 }
 
-/* O bloco @theme só pode ter keyframes ou variáveis */
 @theme {
   @keyframes pata-out {
     0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }

@@ -12,7 +12,7 @@ export class TutorAndPet {
 
  
   linkPetToTutor(tutorId: number, petId: number): Observable<void> {
-    return this.http.post<void>(`${this.API}/v1/tutores/${tutorId}/pets/${petId}`, {});
+    return this.http.post<void>(`${this.API}/tutores/${tutorId}/pets/${petId}`, {});
   }
 
   unlinkPetFromTutor(id: number, petId: number): Observable<void> {

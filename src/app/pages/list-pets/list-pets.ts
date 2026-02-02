@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Adicione para o async pipe
+import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -28,7 +28,7 @@ import { PetFacade } from '../../service/pet/pet.facade';
   templateUrl: './list-pets.html',
 })
 export class ListPets implements OnInit, OnDestroy {
-  public facade = inject(PetFacade); // public para o HTML
+  public facade = inject(PetFacade);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
   

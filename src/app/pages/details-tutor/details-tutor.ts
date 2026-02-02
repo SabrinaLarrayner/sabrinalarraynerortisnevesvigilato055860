@@ -2,18 +2,18 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule } from '@angular/forms'; // Adicionado para o [(ngModel)]
+import { FormsModule } from '@angular/forms'; 
 import { Subject, takeUntil } from 'rxjs';
 import { Card } from '../../components/card/card';
 import { Button } from '../../components/button/button';
 import { TutorFacade } from '../../service/tutor/tutor.facade';
 import { tutorAndPet } from '../../service/tutors-and-pets/tutors-and-pet.facade';
 import { PetFacade } from '../../service/pet/pet.facade';
-
+import { FormatPipe } from '../../utils/regex/regex';
 @Component({
   selector: 'app-details-tutor',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterModule, Card, Button, FormsModule],
+  imports: [CommonModule, MatIconModule, RouterModule, Card, Button, FormsModule, FormatPipe],
   templateUrl: './details-tutor.html',
 })
 export class DetailsTutor implements OnInit, OnDestroy {
@@ -25,12 +25,10 @@ export class DetailsTutor implements OnInit, OnDestroy {
   
   private destroy$ = new Subject<void>();
 
-  // Estados dos Modais
   showDeleteModal = false;
   showLinkPetModal = false;
   showUnlinkModal = false;
 
-  // Auxiliares de Vínculo
   selectedPetId: number | null = null;
   petToUnlink: any = null;
   tutorId!: number;
@@ -50,10 +48,8 @@ export class DetailsTutor implements OnInit, OnDestroy {
     this.facade.clearState();
   }
 
-  // --- LÓGICA DE VÍNCULO (NOVO) ---
-
   openLinkModal(): void {
-    // this.petFacade.getAll(); // Carrega lista de pets para o select
+    this.petFacade.getAll();
     this.selectedPetId = null;
     this.showLinkPetModal = true;
   }
@@ -63,7 +59,7 @@ export class DetailsTutor implements OnInit, OnDestroy {
       this.tutorPetFacade.linkPet(this.tutorId, this.selectedPetId).subscribe({
         next: () => {
           this.showLinkPetModal = false;
-          this.facade.getById(this.tutorId); // Recarrega tutor e sua lista de pets
+          this.facade.getById(this.tutorId);
         },
         error: (err) => console.error('Erro ao vincular:', err)
       });
@@ -87,19 +83,12 @@ export class DetailsTutor implements OnInit, OnDestroy {
     }
   }
 
-  // --- MÉTODOS EXISTENTES ---
-
   goEditTutor(id: number): void {
-    this.router.navigate(['/edit-tutor', id]); // Ajustado para sua rota de edição
+    this.router.navigate(['/details-tutor', id, 'edit']);
   }
 
-  formatPhone(phone: string | undefined): string {
-    if (!phone) return 'Não informado';
-    const value = phone.replace(/\D/g, '');
-    if (value.length === 11) {
-      return value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-    }
-    return value;
+  goPetId(id: number): void {
+    this.router.navigate(['/details-pet', id]);
   }
 
   back(): void {

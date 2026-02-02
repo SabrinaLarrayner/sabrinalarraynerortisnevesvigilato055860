@@ -22,8 +22,7 @@ export class CreateTutor {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-  
-  // Mantemos como public para que o HTML consiga acessar facade.loading$
+
   public facade = inject(TutorFacade);
 
   photoPreview: string | null = null;
@@ -37,7 +36,6 @@ export class CreateTutor {
     cpf: [null, [Validators.required, validateCpf()]],
   });
 
-  // Getters para os controles
   get nomeControl() { return this.form.get('nome') as FormControl; }
   get emailControl() { return this.form.get('email') as FormControl; }
   get telefoneControl() { return this.form.get('telefone') as FormControl; }
@@ -52,7 +50,7 @@ export class CreateTutor {
 
       reader.onload = () => {
         this.photoPreview = reader.result as string;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       };
 
       reader.readAsDataURL(file);
@@ -67,7 +65,6 @@ export class CreateTutor {
 
   onSubmit(): void {
     if (this.form.valid) {
-      // Chama o método orquestrado da Facade em inglês
       this.facade.createWithPhoto(this.form.value, this.selectedFile).subscribe({
         next: () => this.router.navigate(['/list-tutors']),
         error: (err) => console.error('Error during tutor registration:', err)

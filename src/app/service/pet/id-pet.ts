@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// Interface para a Foto
 export interface FotoResponse {
   id: number;
   nome: string;
@@ -11,7 +10,6 @@ export interface FotoResponse {
   url: string;
 }
 
-// Interface para o Tutor
 export interface TutorResponse {
   id: number;
   nome: string;
@@ -22,7 +20,6 @@ export interface TutorResponse {
   foto?: FotoResponse;
 }
 
-// Interface principal do Pet Detalhado
 export interface PetDetailResponse {
   id: number;
   nome: string;

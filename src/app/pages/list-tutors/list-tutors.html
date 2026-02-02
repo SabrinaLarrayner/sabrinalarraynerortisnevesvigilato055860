@@ -43,7 +43,7 @@
             </h2>
             <div class="flex items-center gap-2 text-gray-500 text-base mt-1">
               <mat-icon class="text-lg h-5 w-5">phone</mat-icon>
-              {{ tutor.telefone || 'Sem telefone' }}
+              {{ tutor.telefone | format:'phone' }}
             </div>
           </div>
         </div>

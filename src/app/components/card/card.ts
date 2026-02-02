@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Importe isso
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-card',
-  standalone: true, // Garanta que isso esteja aqui
-  imports: [CommonModule], // Adicione aqui
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './card.html',
 })
 export class Card { }

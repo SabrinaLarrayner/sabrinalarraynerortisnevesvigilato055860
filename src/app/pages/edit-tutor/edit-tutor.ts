@@ -9,7 +9,6 @@ import { Button } from '../../components/button/button';
 import { IdDeletPhotoTutor } from '../../service/tutor/id-delete-photo-tutor';
 import { IdPhotoTutor } from '../../service/tutor/id-photo-tutor';
 
-
 @Component({
   selector: 'app-edit-tutor',
   standalone: true,
@@ -65,8 +64,6 @@ export class EditTutor implements OnInit {
     });
   }
 
-  // --- LÓGICA DE FOTOS (UPLOAD E DELETE) ---
-
   triggerFileInput(input: HTMLInputElement): void {
     input.click();
   }
@@ -76,7 +73,7 @@ export class EditTutor implements OnInit {
     if (file && this.tutorId) {
       this.uploadPhotoService.uploadPhoto(this.tutorId, file).subscribe({
         next: () => {
-          this.facade.getById(this.tutorId); // Atualiza a foto na tela
+          this.facade.getById(this.tutorId);
         },
         error: (err) => console.error('Erro ao fazer upload:', err)
       });
@@ -87,13 +84,11 @@ export class EditTutor implements OnInit {
     this.deletePhotoService.deletePhoto(this.tutorId, fotoId).subscribe({
       next: () => {
         this.showDeleteImgModal = false;
-        this.facade.getById(this.tutorId); // Atualiza para remover a foto da tela
+        this.facade.getById(this.tutorId);
       },
       error: (err) => console.error('Erro ao deletar foto:', err)
     });
   }
-
-  // --- MÁSCARAS ---
 
   private applyMasks(): void {
     this.form.get('cpf')?.valueChanges.subscribe(value => {
@@ -130,13 +125,11 @@ export class EditTutor implements OnInit {
     return this.form.get(name) as FormControl;
   }
 
-  // --- NAVEGAÇÃO E SUBMIT ---
-
   onSubmit(): void {
     if (this.form.valid) {
       const payload = {
         ...this.form.value,
-        cpf: this.form.value.cpf.replace(/\D/g, ''), // Enviando como string limpa
+        cpf: this.form.value.cpf.replace(/\D/g, ''),
         telefone: this.form.value.telefone.replace(/\D/g, '')
       };
 

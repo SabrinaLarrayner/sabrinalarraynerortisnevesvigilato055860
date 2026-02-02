@@ -19,7 +19,7 @@ export class CreatePet {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-  public facade = inject(PetFacade); // public para o loading$ no HTML
+  public facade = inject(PetFacade);
 
   selectedFile: File | null = null;
   photoPreview: string | null = null;
