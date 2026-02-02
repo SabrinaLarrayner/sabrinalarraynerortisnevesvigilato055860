@@ -64,7 +64,7 @@
   </div>
 
   <div class="max-w-screen-2xl mx-auto w-full px-4 mb-10">
-    <mat-paginator [length]="res.total" [pageSize]="pageSize" [pageIndex]="currentPage" [pageSizeOptions]="[6, 12, 24]"
+    <mat-paginator [length]="res.total" [pageSize]="pageSize" [pageIndex]="currentPage" [pageSizeOptions]="[10, 20, 50, 100]"
       (page)="handlePageEvent($event)" class="rounded-2xl border border-gray-100 shadow-sm">
     </mat-paginator>
   </div>

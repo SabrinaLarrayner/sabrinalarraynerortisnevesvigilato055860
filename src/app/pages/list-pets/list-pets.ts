@@ -16,13 +16,13 @@ import { PetFacade } from '../../service/pet/pet.facade';
   selector: 'app-list-pets',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatIconModule, 
-    MatPaginatorModule, 
-    ReactiveFormsModule, 
-    InputField, 
-    Button, 
-    Card, 
+    CommonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    InputField,
+    Button,
+    Card,
     LayoutToggleView
   ],
   templateUrl: './list-pets.html',
@@ -31,7 +31,7 @@ export class ListPets implements OnInit, OnDestroy {
   public facade = inject(PetFacade);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
-  
+
   currentPage = 0;
   pageSize = 10;
   searchControl = new FormControl('');

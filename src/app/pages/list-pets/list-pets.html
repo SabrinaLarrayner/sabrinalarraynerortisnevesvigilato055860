@@ -36,15 +36,29 @@
           <img [src]="pet.foto?.url || 'dog-3.png'" [alt]="pet.nome"
             class="w-full h-full object-cover transition-opacity duration-300" [class.opacity-30]="!pet.foto?.url" />
         </div>
+        <div class="flex flex-col gap-3 px-1">
+          <div class="flex">
+            <h2
+              class="inline-block px-3 py-1 bg-purple-100 text-purple-900 text-xl font-black rounded-full truncate tracking-tight uppercase">
+              {{ pet.nome }}
+            </h2>
+          </div>
 
-        <div class="flex flex-col gap-1 text-purple-900 px-1">
-          <h2 class="text-xl font-black truncate">{{ pet.nome }}</h2>
-          <p class="text-gray-600 text-sm font-medium truncate">Raça: {{ pet.raca }}</p>
-          <p class="text-gray-400 text-xs">Idade: {{ pet.idade }} {{ yearsPlural(pet.idade) }}</p>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <mat-icon class="h-4 w-4 text-purple-600 flex items-center justify-center">pets</mat-icon>
+              <p class="text-gray-600 text-sm font-bold truncate">{{ pet.raca }}</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <mat-icon class="h-4 w-4 text-purple-300 flex items-center justify-center">date_range</mat-icon>
+              <p class="text-gray-400 text-xs font-medium">{{ pet.idade }} {{ yearsPlural(pet.idade) }}</p>
+            </div>
+          </div>
         </div>
 
         <div class="pt-2">
-          <app-button label="Detalhes" variant="outline" class="w-full block py-1" (click)="detailsPet(pet.id)">
+          <app-button label="Detalhes" variant="primary" class="w-full block py-1" (click)="detailsPet(pet.id)">
           </app-button>
         </div>
       </div>
@@ -57,16 +71,16 @@
     }
   </div>
 
-  <div class="max-w-screen-2xl mx-auto w-full px-4 mb-10">
-    <mat-paginator [length]="data.totalElements" [pageSize]="pageSize" [pageIndex]="currentPage"
-      [pageSizeOptions]="[5, 10, 20, 50]" (page)="handlePageEvent($event)"
+  <div class="max-w-screen-2xl mx-auto w-full px-4">
+    <mat-paginator [length]="data.total" [pageSize]="pageSize" [pageIndex]="currentPage"
+      [pageSizeOptions]="[10, 20, 50, 100]" (page)="handlePageEvent($event)"
       class="rounded-2xl border border-gray-100 shadow-sm">
     </mat-paginator>
   </div>
 
   } @else {
   <div class="flex flex-col items-center justify-center py-20 text-purple-600">
-    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600 mb-4"></div>
+    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-600"></div>
     <p class="animate-pulse font-bold">Buscando informações dos pets...</p>
   </div>
   }
