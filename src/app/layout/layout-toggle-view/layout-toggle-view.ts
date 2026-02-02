@@ -23,4 +23,9 @@ export class LayoutToggleView {
       this.router.navigate(['/list-tutors']);
     }
   }
+
+  logout(): void {
+    console.log('Saindo...');
+    this.router.navigate(['/login']);
+  }
 }

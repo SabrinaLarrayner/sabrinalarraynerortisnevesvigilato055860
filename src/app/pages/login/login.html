@@ -1,35 +1,37 @@
 <div
-  class="min-h-screen flex items-start pt-20 sm:pt-0 sm:items-center justify-center bg-gray-100 overflow-hidden px-4">
-  <div class="relative w-full max-w-md mx-auto">
+  class="min-h-screen flex flex-col items-center justify-start sm:justify-center bg-gray-100 overflow-y-auto overflow-x-hidden  sm:pt-0">
 
+  <div class="relative w-full max-w-sm mx-auto mt-20 sm:mt-0">
+    
     <div
-      class="absolute -top-20 sm:-top-24 left-1/2 -translate-x-1/2 w-full flex justify-center pointer-events-none z-0">
+      class="absolute -top-20 sm:-top-28 left-1/2 -translate-x-1/2 w-full flex justify-center pointer-events-none z-0">
+      
       <img src="/dog-1.png" alt="Cachorro olhando"
-        class="w-28 sm:w-36 h-auto transition-all duration-500 ease-out transform"
-        [class.translate-y-24]="!isLoginFocused" [class.opacity-0]="!isLoginFocused"
+        class="w-24 sm:w-36 h-auto transition-all duration-500 ease-out transform"
+        [class.translate-y-12]="!isLoginFocused" [class.opacity-0]="!isLoginFocused"
         [class.translate-y-0]="isLoginFocused" [class.opacity-100]="isLoginFocused" />
 
       <img src="/dog-2.png" alt="Tampando o olho"
-        class="w-28 sm:w-36 h-auto absolute transition-all duration-500 ease-out transform"
-        [class.translate-y-24]="!isSenhaFocada" [class.opacity-0]="!isSenhaFocada" [class.translate-y-0]="isSenhaFocada"
-        [class.opacity-100]="isSenhaFocada" />
+        class="w-24 sm:w-36 h-auto absolute transition-all duration-500 ease-out transform"
+        [class.translate-y-12]="!isSenhaFocada" [class.opacity-0]="!isSenhaFocada" 
+        [class.translate-y-0]="isSenhaFocada" [class.opacity-100]="isSenhaFocada" />
     </div>
 
     <app-card class="relative z-10 w-full block shadow-2xl rounded-3xl overflow-hidden">
-      <div class="flex flex-col items-center gap-4 sm:gap-6 p-4 sm:p-6 bg-white">
+      <div class="flex flex-col items-center gap-4 p-6 sm:p-8 bg-white">
 
         <div class="flex justify-center">
-          <img src="/logo-gp.png" alt="Guardião de Pegadas" class="w-24 sm:w-32 h-auto" />
+          <img src="/logo-gp.png" alt="Guardião de Pegadas" class="w-16 sm:w-20 h-auto" />
         </div>
 
-        <div class="flex flex-col gap-1 sm:gap-2 text-center">
-          <h1 class="text-2xl sm:text-3xl font-black text-purple-900 tracking-tight">
+        <div class="flex flex-col gap-1 text-center">
+          <h1 class="text-xl sm:text-2xl font-black text-purple-900 tracking-tight leading-tight">
             Guardião de Pegadas
           </h1>
-          <p class="text-gray-500 text-xs sm:text-sm">Entre para cuidar dos seus amigos</p>
+          <p class="text-gray-500 text-[10px] sm:text-xs italic">Entre para cuidar dos seus amigos</p>
         </div>
 
-        <div class="w-full flex flex-col gap-3 sm:gap-4">
+        <div class="w-full flex flex-col gap-3">
           <app-input-field label="Login" icon="person" [control]="loginForm.controls.username"
             (focus)="setLoginFocus(true)" (blur)="setLoginFocus(false)">
           </app-input-field>
@@ -39,13 +41,18 @@
           </app-input-field>
         </div>
 
-        <div class="w-full mt-2 sm:mt-4">
+        <div class="w-full mt-2">
           @if ({ loading: (facade.loading$ | async) }; as state) {
           <app-button [label]="state.loading ? 'Entrando...' : 'Entrar'" variant="primary"
-            class="w-full py-3 text-base sm:text-lg font-bold" (click)="onSubmit()"
+            class="w-full py-2.5 text-base font-bold shadow-lg shadow-purple-200" (click)="onSubmit()"
             [disabled]="loginForm.invalid || !!state.loading">
           </app-button>
           }
+        </div>
+
+        <div class="flex flex-col items-center text-center mt-2 border-t border-gray-50 pt-4 w-full opacity-60">
+          <span class="text-gray-400 text-[9px] uppercase tracking-widest font-bold">Processo Seletivo Seplag</span>
+          <span class="text-gray-400 text-[9px] font-medium">CONJUNTO Nº 001/2026</span>
         </div>
 
       </div>

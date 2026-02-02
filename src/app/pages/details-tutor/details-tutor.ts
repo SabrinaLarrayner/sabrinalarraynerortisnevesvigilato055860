@@ -99,9 +99,11 @@ export class DetailsTutor implements OnInit, OnDestroy {
     this.showDeleteModal = show;
   }
 
-  confirmDelete(id: number): void {
-    this.facade.delete(id);
-    this.toggleDeleteModal(false);
-    this.back(); 
+  confirmDelete(): void {
+    if (this.tutorId) {
+      this.facade.delete(this.tutorId);
+      this.toggleDeleteModal(false);
+      this.back(); 
+    }
   }
 }
