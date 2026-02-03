@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
 import { AuthService, LoginResponse } from './auth';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -9,11 +10,16 @@ import { AuthService, LoginResponse } from './auth';
 export class AuthFacade {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private http = inject(HttpClient);
 
   private loadingSubject = new BehaviorSubject<boolean>(false);
   readonly loading$ = this.loadingSubject.asObservable();
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(!!localStorage.getItem('access_token'));
   readonly isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  private apiOnlineSubject = new BehaviorSubject<boolean>(true);
+  readonly apiOnline$ = this.apiOnlineSubject.asObservable();
 
   login(credentials: { username: string; password: string }): void {
     this.loadingSubject.next(true);
@@ -38,15 +44,29 @@ export class AuthFacade {
     this.router.navigate(['/login']);
   }
 
- 
+  checkApiHealth(): void {
+    this.http.get('https://pet-manager-api.geia.vip/v1/pets?size=1').pipe(
+      tap(() => {
+        this.apiOnlineSubject.next(true);
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          this.apiOnlineSubject.next(true);
+        } else {
+          this.apiOnlineSubject.next(false);
+        }
+        return of(null);
+      })
+    ).subscribe();
+  }
+
   get isLoggedIn(): boolean {
-    return this.isAuthenticatedSubject.value;
+    return this.isAuthenticatedSubject.value && !!localStorage.getItem('access_token');
   }
 
   getAccessToken(): string | null {
     return localStorage.getItem('access_token');
   }
-
 
   updateAuthState(isLoggedIn: boolean): void {
     this.isAuthenticatedSubject.next(isLoggedIn);
