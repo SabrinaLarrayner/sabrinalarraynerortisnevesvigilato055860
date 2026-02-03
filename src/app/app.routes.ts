@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './service/auth/auth-guard';
 
 export const routes: Routes = [
   {
@@ -7,6 +8,7 @@ export const routes: Routes = [
   },
   {
     path: '',
+    canActivate: [authGuard],
     children: [
       {
         path: 'list-pets',
@@ -46,5 +48,9 @@ export const routes: Routes = [
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];

@@ -1,16 +1,31 @@
-import { TestBed } from '@angular/core/testing';
+import { HttpClient, HttpHeaders, HttpContext } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { tap } from 'rxjs';
+import { HttpContextToken } from '@angular/common/http';
 
-import { AuthRefresh } from './auth-refresh';
+export const BYPASS_LOGIC = new HttpContextToken(() => false);
 
-describe('AuthRefresh', () => {
-  let service: AuthRefresh;
+@Injectable({ providedIn: 'root' })
+export class AuthRefreshService {
+  private http = inject(HttpClient);
+  private readonly API = `${environment.api_url}/autenticacao/refresh`;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthRefresh);
-  });
+  execute() {
+    const refreshToken = localStorage.getItem('refresh_token');
+    
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${refreshToken}`
+    });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+    return this.http.put<any>(this.API, {}, { 
+      headers,
+      context: new HttpContext().set(BYPASS_LOGIC, true) 
+    }).pipe(
+      tap(res => {
+        localStorage.setItem('access_token', res.access_token);
+        localStorage.setItem('refresh_token', res.refresh_token);
+      })
+    );
+  }
+}

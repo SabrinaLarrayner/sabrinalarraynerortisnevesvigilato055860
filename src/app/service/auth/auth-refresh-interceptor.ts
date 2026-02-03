@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthRefreshService } from './auth-refresh';
+import { AuthRefreshService, BYPASS_LOGIC } from './auth-refresh'; 
 import { catchError, switchMap, throwError, BehaviorSubject, filter, take, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -10,12 +10,23 @@ let refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<st
 export const authRefreshInterceptor: HttpInterceptorFn = (req, next) => {
   const refreshService = inject(AuthRefreshService);
   const router = inject(Router);
+  
+  const hasRefreshToken = !!localStorage.getItem('refresh_token');
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !req.url.includes('/autenticacao/refresh')) {
+      const isHealthCheck = req.url.includes('pets?size=1');
+
+      if (
+        error.status === 401 && 
+        !req.url.includes('/autenticacao/refresh') && 
+        !req.url.includes('/autenticacao/login') &&
+        !isHealthCheck &&
+        hasRefreshToken
+      ) {
         return handle401(req, next, refreshService, router);
       }
+
       return throwError(() => error);
     })
   );
@@ -40,9 +51,26 @@ function handle401(req: any, next: any, service: AuthRefreshService, router: Rou
       })
     );
   }
+
   return refreshTokenSubject.pipe(
     filter(token => token !== null),
     take(1),
     switchMap((token) => next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })))
   );
 }
+
+export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('access_token');
+  
+  if (req.url.includes('/autenticacao/refresh') || req.context.get(BYPASS_LOGIC)) {
+    return next(req);
+  }
+
+  if (token) {
+    const cloned = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` }
+    });
+    return next(cloned);
+  }
+  return next(req);
+};

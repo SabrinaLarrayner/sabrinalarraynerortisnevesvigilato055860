@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, of, tap } from 'rxjs';
+import { forkJoin, of, interval, startWith, switchMap, catchError, BehaviorSubject } from 'rxjs';
+import { HttpClient} from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import { AuthService, LoginResponse } from './auth';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -45,19 +46,28 @@ export class AuthFacade {
   }
 
   checkApiHealth(): void {
-    this.http.get('https://pet-manager-api.geia.vip/v1/pets?size=1').pipe(
-      tap(() => {
-        this.apiOnlineSubject.next(true);
-      }),
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          this.apiOnlineSubject.next(true);
-        } else {
-          this.apiOnlineSubject.next(false);
-        }
-        return of(null);
+    interval(30000).pipe(
+      startWith(0),
+      switchMap(() => {
+        const petsUrl = `${environment.api_url}/pets`.replace('/v1/v1', '/v1');
+        const tutoresUrl = `${environment.api_url}/tutores`.replace('/v1/v1', '/v1');
+        console.log(`[${new Date().toLocaleTimeString()}]  Verificando integridade da API...`);
+        return forkJoin({
+          pets: this.http.get(petsUrl).pipe(catchError(err => of(err))),
+          tutores: this.http.get(tutoresUrl).pipe(catchError(err => of(err)))
+        });
       })
-    ).subscribe();
+    ).subscribe(results => {
+      const isPetsAlive = results.pets.status === 200 || results.pets.status === 401 || results.pets.status === 403 || !results.pets.status;
+      const isTutoresAlive = results.tutores.status === 200 || results.tutores.status === 401 || results.tutores.status === 403 || !results.tutores.status;
+      if (isPetsAlive && isTutoresAlive) {
+        console.log('API ONLINE', 'color: green; font-weight: bold;');
+        this.apiOnlineSubject.next(true);
+      } else {
+        console.error('API OFFLINE', 'color: red; font-weight: bold;');
+        this.apiOnlineSubject.next(false);
+      }
+    });
   }
 
   get isLoggedIn(): boolean {
