@@ -1,16 +1,44 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TutorAndPet } from './tutor-and-pet';
+import { environment } from '../../../environments/environment';
 
-import { DeleteTutorAndPet } from './delete-tutor-and-pet';
-
-describe('DeleteTutorAndPet', () => {
-  let service: DeleteTutorAndPet;
+describe('TutorAndPet', () => {
+  let service: TutorAndPet;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(DeleteTutorAndPet);
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [TutorAndPet]
+    });
+
+    service = TestBed.inject(TutorAndPet);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('deve ser criado corretamente', () => {
     expect(service).toBeTruthy();
   });
+
+  it('deve vincular um pet ao tutor via POST', () => {
+    const tutorId = 1;
+    const petId = 10;
+  
+    service.linkPetToTutor(tutorId, petId).subscribe();
+  
+    const req = httpMock.expectOne(
+      `${environment.api_url}tutores/${tutorId}/pets/${petId}`
+    );
+  
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual({});
+  
+    req.flush(null);
+  });
+  
 });

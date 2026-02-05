@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-// Interface baseada no Request Body da sua API
 export interface PetRequest {
   nome: string;
   raca: string;
