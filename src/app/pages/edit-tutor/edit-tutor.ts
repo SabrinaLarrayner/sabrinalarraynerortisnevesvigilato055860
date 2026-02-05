@@ -92,7 +92,6 @@ export class EditTutor implements OnInit {
     });
   }
 
-  // Lógica de Máscaras (importante para o usuário ver formatado)
   private applyMasks(): void {
     this.form.get('cpf')?.valueChanges.subscribe(value => {
       if (value) {

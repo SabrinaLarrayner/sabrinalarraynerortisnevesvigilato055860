@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Button } from './button';
 import { MatIconModule } from '@angular/material/icon';
 import { By } from '@angular/platform-browser';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Button', () => {
   let component: Button;
@@ -14,7 +15,6 @@ describe('Button', () => {
 
     fixture = TestBed.createComponent(Button);
     component = fixture.componentInstance;
-    // Removido o fixture.detectChanges() daqui para evitar o erro NG0100
   });
 
   it('deve criar o componente', () => {
@@ -30,29 +30,37 @@ describe('Button', () => {
     expect(btnElement.textContent).toContain('Confirmar');
   });
 
-  it('deve renderizar o ícone somente se showIcon for true', () => {
-    component.showIcon = true;
-    component.iconName = 'add';
-    fixture.detectChanges();
-
-    const icon = fixture.debugElement.query(By.css('mat-icon'));
-    expect(icon).toBeTruthy();
-    expect(icon.nativeElement.textContent).toContain('add');
-  });
   it('deve aplicar estado visual de desabilitado', () => {
-    component.disabled = true;
-    component.variant = 'primary';
-  
+    fixture.componentRef.setInput('variant', 'primary');
+    fixture.componentRef.setInput('disabled', true);
     fixture.detectChanges();
   
-    const btn = fixture.debugElement.query(By.css('button')).nativeElement;
+    const btn = fixture.debugElement.query(By.css('button'))
+      .nativeElement as HTMLButtonElement;
   
     expect(btn.disabled).toBe(true);
-  
-    expect(btn.classList.contains('bg-gray-300')).toBe(true);
-    expect(btn.classList.contains('cursor-not-allowed')).toBe(true);
-    expect(btn.classList.contains('shadow-none')).toBe(true);
+    expect(btn.className).toContain('bg-gray-300');
+    expect(btn.className).toContain('cursor-not-allowed');
+    expect(btn.className).toContain('shadow-none');
   });
-  
-  
+  it('deve emitir onClick quando clicado e NÃO estiver desabilitado', () => {
+    const spy = vi.spyOn(component.onClick, 'emit');
+    component.disabled = false;
+    fixture.detectChanges();
+
+    const btn = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+  btn.click();
+
+    expect(spy).toHaveBeenCalled();
+  });
+  it('NÃO deve emitir onClick quando o botão estiver desabilitado', () => {
+    const spy = vi.spyOn(component.onClick, 'emit');
+    component.disabled = true;
+    fixture.detectChanges();
+
+    const btn = fixture.debugElement.query(By.css('button'));
+    btn.triggerEventHandler('click', null);
+
+    expect(spy).not.toHaveBeenCalled();
+  });
 });

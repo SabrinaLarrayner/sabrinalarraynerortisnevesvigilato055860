@@ -2,15 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CreatePet } from './create-pet';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { provideNgxMask } from 'ngx-mask';
+import { provideRouter, Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
 import { PetFacade } from '../../service/pet/pet.facade';
-import { Router } from '@angular/router';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 
-describe('CreatePet (Vitest)', () => {
+describe('CLEA (Vitest)', () => {
   let component: CreatePet;
   let fixture: ComponentFixture<CreatePet>;
   let router: Router;
@@ -22,12 +21,12 @@ describe('CreatePet (Vitest)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CreatePet, NoopAnimationsModule],
+      imports: [CreatePet,NoopAnimationsModule],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
         provideRouter([]),
-        provideNgxMask(),
+        provideEnvironmentNgxMask(),
         { provide: PetFacade, useValue: mockPetFacade }
       ]
     }).compileComponents();
@@ -35,27 +34,33 @@ describe('CreatePet (Vitest)', () => {
     fixture = TestBed.createComponent(CreatePet);
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
-    
+
     vi.clearAllMocks();
-    localStorage.clear();
-    
     fixture.detectChanges();
   });
 
-  it('deve instanciar o componente corretamente', () => {
+  it('deve instanciar o componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('deve verificar se o título "Cadastrar Pet" está presente no HTML', () => {
+  it('deve exibir o título "Cadastrar Pet"', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain('Cadastrar Pet');
   });
 
-  it('deve submeter o formulário com sucesso quando os dados forem válidos', () => {
+  it('não deve submeter se o formulário for inválido', () => {
+    component.onSubmit();
+    expect(mockPetFacade.createWithPhoto).not.toHaveBeenCalled();
+  });
+
+  it('deve submeter com sucesso quando o formulário for válido', () => {
+    const file = new File([''], 'pet.png', { type: 'image/png' });
+
     component.form.patchValue({
       nome: 'Rex',
       idade: 2,
-      raca: 'Labrador'
+      raca: 'Labrador',
+      photo: file
     });
 
     component.onSubmit();
@@ -63,59 +68,65 @@ describe('CreatePet (Vitest)', () => {
     expect(mockPetFacade.createWithPhoto).toHaveBeenCalled();
   });
 
-  it('deve mudar a label da idade para plural/singular (anos/ano)', () => {
-    component.form.patchValue({ idade: 2 });
-    expect(component.getYearsLabel()).toBe('Idade (anos)');
-
+  it('deve ajustar o label da idade corretamente', () => {
     component.form.patchValue({ idade: 1 });
     expect(component.getYearsLabel()).toBe('Idade (ano)');
+
+    component.form.patchValue({ idade: 2 });
+    expect(component.getYearsLabel()).toBe('Idade (anos)');
   });
 
-  it('deve processar a seleção de uma imagem fake', () => {
-    const blob = new Blob([''], { type: 'image/png' });
-    const file = new File([blob], 'dog-seplag.png', { type: 'image/png' });
+  it('deve processar a seleção de imagem', () => {
+    const file = new File([''], 'dog.png', { type: 'image/png' });
     const event = { target: { files: [file] } };
 
     component.onFileSelected(event);
 
-    expect(component.selectedFile).toBe(file);
-    expect(component.selectedFile?.name).toBe('dog-seplag.png');
+    expect(component.form.get('photo')?.value).toBe(file);
   });
 
-  it('deve limpar as variáveis de imagem ao clicar em "Excluir"', () => {
-    component.selectedFile = new File([''], 'foto-velha.png');
-    component.photoPreview = 'data:image/png;base64,sample';
+  it('deve remover a foto corretamente', () => {
+    const file = new File([''], 'foto.png', { type: 'image/png' });
+
+    component.form.get('photo')?.setValue(file);
+    component.photoPreview = 'data:image/png;base64,test';
 
     component.removePhoto();
 
-    expect(component.selectedFile).toBeNull();
+    expect(component.form.get('photo')?.value).toBeNull();
     expect(component.photoPreview).toBeNull();
   });
 
-  it('deve submeter o formulário com o nome "Bolota" e navegar para listagem', () => {
+  it('deve navegar para /list-pets após submit', () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
     const file = new File([''], 'pet.png', { type: 'image/png' });
-    
-    component.selectedFile = file;
+
     component.form.patchValue({
-      nome: 'Bolota', 
+      nome: 'Bolota',
       idade: 3,
-      raca: 'Poodle'
+      raca: 'Poodle',
+      photo: file
     });
 
     component.onSubmit();
 
     expect(mockPetFacade.createWithPhoto).toHaveBeenCalledWith(
-      expect.objectContaining({ nome: 'Bolota' }),
+      expect.objectContaining({
+        nome: 'Bolota',
+        idade: 3,
+        raca: 'Poodle'
+      }),
       file
     );
-    
+
     expect(navigateSpy).toHaveBeenCalledWith(['/list-pets']);
   });
 
-  it('deve navegar de volta para /list-pets ao cancelar', () => {
+  it('deve navegar para /list-pets ao cancelar', () => {
     const navigateSpy = vi.spyOn(router, 'navigate');
+
     component.cancel();
+
     expect(navigateSpy).toHaveBeenCalledWith(['/list-pets']);
   });
 });

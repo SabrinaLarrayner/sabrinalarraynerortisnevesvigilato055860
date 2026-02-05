@@ -13,14 +13,19 @@ export class Button {
   @Input() variant: 'primary' | 'outline' = 'primary';  
   @Input() showIcon: boolean = false; 
   @Input() iconName: string = 'search'; 
-  
   @Input() disabled: boolean = false; 
-
+  @Input() type: 'button' | 'submit' = 'button'; 
   @Output() onClick = new EventEmitter<void>();
-
   handlePress() {
+    console.log('Botão clicado!', { 
+      type: this.type, 
+      disabled: this.disabled, 
+      variant: this.variant 
+    });
+  
     if (!this.disabled) {
       this.onClick.emit();
     }
   }
+  
 }

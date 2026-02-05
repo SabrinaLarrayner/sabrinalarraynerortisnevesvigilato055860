@@ -1,34 +1,35 @@
-<button type="button" (click)="handlePress()" [disabled]="disabled" [ngClass]="{
-    'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer shadow-sm':
-      variant === 'primary' && !disabled,
-    'bg-gray-300 text-gray-500 cursor-not-allowed shadow-none':
-      variant === 'primary' && disabled,
-    'border-2 border-purple-600 text-purple-600 hover:bg-purple-50 cursor-pointer shadow-sm':
-      variant === 'outline' && !disabled,
+<button 
+  [type]="type" 
+  [disabled]="disabled"
+  class="flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-semibold transition-all duration-200 h-fit w-full active:scale-95 disabled:scale-100"
+  
+  [class.bg-purple-600]="variant === 'primary' && !disabled" 
+  [class.text-white]="variant === 'primary' && !disabled"
+  
+  [class.border-2]="variant === 'outline'"
+  [class.border-purple-600]="variant === 'outline' && !disabled"
+  [class.text-purple-600]="variant === 'outline' && !disabled"
+  [class.border-gray-300]="variant === 'outline' && disabled" 
+  [class.text-gray-400]="variant === 'outline' && disabled"
 
-    'border-2 border-gray-300 text-gray-400 cursor-not-allowed shadow-none':
-      variant === 'outline' && disabled
-  }" class="
-    flex items-center justify-center gap-2
-    px-6 py-2.5
-    rounded-full
-    font-semibold
-    transition-all duration-200
-    active:scale-95
-    disabled:scale-100
-    h-fit w-full
-  ">
+  [class.cursor-pointer]="!disabled" 
+  [class.shadow-sm]="!disabled"
+  [class.cursor-not-allowed]="disabled" 
+  [class.shadow-none]="disabled" 
+
+  [class.bg-gray-300]="disabled && variant === 'primary'" 
+  [class.text-gray-500]="disabled && variant === 'primary'"
+  (click)="handlePress()"
+  >
+
   <span>{{ label }}</span>
 
   @if (showIcon) {
-  <mat-icon [ngClass]="
-        disabled
-          ? 'text-gray-400'
-          : variant === 'primary'
-            ? 'text-white'
-            : 'text-purple-600'
-      ">
-    {{ iconName }}
-  </mat-icon>
+    <mat-icon 
+      [class.text-gray-400]="disabled" 
+      [class.text-white]="!disabled && variant === 'primary'"
+      [class.text-purple-600]="!disabled && variant === 'outline'">
+      {{ iconName }}
+    </mat-icon>
   }
 </button>

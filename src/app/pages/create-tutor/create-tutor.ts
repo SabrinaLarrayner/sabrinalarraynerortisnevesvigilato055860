@@ -1,9 +1,16 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  FormControl
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { provideNgxMask } from 'ngx-mask';
+
 import { Card } from '../../components/card/card';
 import { Button } from '../../components/button/button';
 import { InputField } from '../../components/input-field/input-field';
@@ -13,19 +20,25 @@ import { validateCpf } from '../../utils/cpf-validator/cpf-validator';
 @Component({
   selector: 'app-create-tutor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, Card, Button, InputField, /* NgxMaskDirective */],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    Card,
+    Button,
+    InputField
+  ],
   providers: [provideNgxMask()],
   templateUrl: './create-tutor.html',
 })
 export class CreateTutor {
-  private fb = inject(FormBuilder); 
+  private fb = inject(FormBuilder);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   public facade = inject(TutorFacade);
 
   photoPreview: string | null = null;
-  selectedFile: File | null = null;
 
   form: FormGroup = this.fb.group({
     nome: ['', [Validators.required]],
@@ -33,42 +46,68 @@ export class CreateTutor {
     telefone: ['', [Validators.required]],
     endereco: [''],
     cpf: [null, [Validators.required, validateCpf()]],
+    photo: [null, Validators.required]
   });
 
-  get nomeControl() { return this.form.get('nome') as FormControl; }
-  get emailControl() { return this.form.get('email') as FormControl; }
-  get telefoneControl() { return this.form.get('telefone') as FormControl; }
-  get enderecoControl() { return this.form.get('endereco') as FormControl; }
-  get cpfControl() { return this.form.get('cpf') as FormControl; }
+  get nomeControl(): FormControl {
+    return this.form.get('nome') as FormControl;
+  }
+
+  get emailControl(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get telefoneControl(): FormControl {
+    return this.form.get('telefone') as FormControl;
+  }
+
+  get enderecoControl(): FormControl {
+    return this.form.get('endereco') as FormControl;
+  }
+
+  get cpfControl(): FormControl {
+    return this.form.get('cpf') as FormControl;
+  }
+
+  get photoControl(): FormControl {
+    return this.form.get('photo') as FormControl;
+  }
 
   onFileSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      const reader = new FileReader();
+    const file: File | undefined = event.target.files?.[0];
+    if (!file) return;
+    this.photoControl.setValue(file);
+    this.photoControl.markAsTouched();
+    this.photoControl.updateValueAndValidity();
 
-      reader.onload = () => {
-        this.photoPreview = reader.result as string;
-        this.cdr.detectChanges();
-      };
-
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.photoPreview = reader.result as string;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   removePhoto(): void {
     this.photoPreview = null;
-    this.selectedFile = null;
-    this.cdr.detectChanges();
+
+    this.photoControl.setValue(null);
+    this.photoControl.markAsTouched();
+    this.photoControl.updateValueAndValidity();
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      this.facade.createWithPhoto(this.form.value, this.selectedFile).subscribe({
-        next: () => this.router.navigate(['/list-tutors']),
-        error: (err) => console.error('Error during tutor registration:', err)
-      });
+    if (!this.form.valid) {
+      console.warn('form inválido');
+      this.form.markAllAsTouched();
+      return;
     }
+    const formValue = this.form.getRawValue();
+    const photoFile: File = formValue.photo;
+    this.facade.createWithPhoto(formValue, photoFile).subscribe({
+      next: () => this.router.navigate(['/list-tutors']),
+      error: (err) => console.error('Error during tutor registration:', err)
+    });
   }
 
   cancel(): void {

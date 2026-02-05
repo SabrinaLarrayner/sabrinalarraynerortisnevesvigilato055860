@@ -13,7 +13,6 @@ describe('InputSegmentedControl', () => {
 
     fixture = TestBed.createComponent(InputSegmentedControl);
     component = fixture.componentInstance;
-    // Não chamamos detectChanges aqui para evitar problemas de sincronia nos testes iniciais
   });
 
   it('deve criar o componente', () => {

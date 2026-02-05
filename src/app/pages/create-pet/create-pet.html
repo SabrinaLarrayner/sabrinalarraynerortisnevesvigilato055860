@@ -42,6 +42,7 @@
             <app-button 
             [label]="(facade.loading$ | async) ? 'Cadastrando...' : 'Cadastrar Pet'" 
             class="flex-1"
+            (click)="onSubmit()"
             [disabled]="form.invalid || !!(facade.loading$ | async)">
           </app-button>
           </div>

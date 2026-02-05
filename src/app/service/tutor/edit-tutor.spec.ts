@@ -19,7 +19,6 @@ describe('EditTutorService', () => {
   });
 
   afterEach(() => {
-    // Garante que não existam requisições pendentes
     httpMock.verify();
   });
 
