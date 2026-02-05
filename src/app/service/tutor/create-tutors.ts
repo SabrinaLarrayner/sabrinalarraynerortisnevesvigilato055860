@@ -32,8 +32,6 @@ export interface TutorResponse {
 export class CreateTutorService {
   private http = inject(HttpClient);
   private readonly API_URL = `${environment.api_url}/tutores`;
-
-  // Mudei o nome do parâmetro para 'tutor' para fazer mais sentido
   execute(tutor: TutorRequest): Observable<TutorResponse> {
     return this.http.post<TutorResponse>(this.API_URL, tutor);
   }
