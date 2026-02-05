@@ -8,6 +8,7 @@ import { InputField } from '../../components/input-field/input-field';
 import { Button } from '../../components/button/button';
 import { IdDeletPhotoTutor } from '../../service/tutor/id-delete-photo-tutor';
 import { IdPhotoTutor } from '../../service/tutor/id-photo-tutor';
+import { validateCpf } from '../../utils/cpf-validator/cpf-validator';
 
 @Component({
   selector: 'app-edit-tutor',
@@ -23,45 +24,49 @@ export class EditTutor implements OnInit {
   private deletePhotoService = inject(IdDeletPhotoTutor);
   private uploadPhotoService = inject(IdPhotoTutor);
   public facade = inject(TutorFacade);
+  public tutorId!: number;
+  public showDeleteImgModal = false;
 
-  form!: FormGroup;
-  tutorId!: number;
-  showDeleteImgModal = false;
+  public form: FormGroup = this.fb.group({
+    nome: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    telefone: ['', [Validators.required]],
+    endereco: ['', [Validators.required]],
+    cpf: [null, [Validators.required, validateCpf()]],
+  });
 
   ngOnInit(): void {
-    this.tutorId = Number(this.route.snapshot.paramMap.get('id'));
-    this.initForm();
-    this.applyMasks();
-
-    if (this.tutorId) {
-      this.facade.getById(this.tutorId);
-
-      this.facade.tutorSelected$.subscribe(tutor => {
-        if (tutor) {
-          const formattedTutor = {
-            ...tutor,
-            cpf: this.formatCPF(String(tutor.cpf)),
-            telefone: this.formatTelefone(tutor.telefone)
-          };
-
-          this.form.reset(formattedTutor);
-
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 0);
-        }
-      });
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.tutorId = Number(idParam);
+      this.initData();
+      this.applyMasks();
+    } else {
+      this.back();
     }
   }
 
-  private initForm(): void {
-    this.form = this.fb.group({
-      nome: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      telefone: ['', [Validators.required]],
-      endereco: ['', [Validators.required]],
-      cpf: [null, [Validators.required]]
+  private initData(): void {
+    this.facade.getById(this.tutorId);
+    this.facade.tutorSelected$.subscribe(tutor => {
+      if (tutor) {
+        const formattedTutor = {
+          ...tutor,
+          cpf: this.formatCPF(String(tutor.cpf)),
+          telefone: this.formatTelefone(tutor.telefone)
+        };
+
+        this.form.patchValue(formattedTutor);
+        
+        setTimeout(() => {
+          this.cdr.detectChanges();
+        }, 0);
+      }
     });
+  }
+
+  getControl(name: string): FormControl {
+    return this.form.get(name) as FormControl;
   }
 
   triggerFileInput(input: HTMLInputElement): void {
@@ -72,9 +77,7 @@ export class EditTutor implements OnInit {
     const file: File = event.target.files[0];
     if (file && this.tutorId) {
       this.uploadPhotoService.uploadPhoto(this.tutorId, file).subscribe({
-        next: () => {
-          this.facade.getById(this.tutorId);
-        },
+        next: () => this.facade.getById(this.tutorId),
         error: (err) => console.error('Erro ao fazer upload:', err)
       });
     }
@@ -85,11 +88,11 @@ export class EditTutor implements OnInit {
       next: () => {
         this.showDeleteImgModal = false;
         this.facade.getById(this.tutorId);
-      },
-      error: (err) => console.error('Erro ao deletar foto:', err)
+      }
     });
   }
 
+  // Lógica de Máscaras (importante para o usuário ver formatado)
   private applyMasks(): void {
     this.form.get('cpf')?.valueChanges.subscribe(value => {
       if (value) {
@@ -119,10 +122,6 @@ export class EditTutor implements OnInit {
     if (numbers.length <= 2) return numbers;
     if (numbers.length <= 7) return `(${numbers.substring(0, 2)}) ${numbers.substring(2)}`;
     return `(${numbers.substring(0, 2)}) ${numbers.substring(2, 7)}-${numbers.substring(7, 11)}`;
-  }
-
-  getControl(name: string): FormControl {
-    return this.form.get(name) as FormControl;
   }
 
   onSubmit(): void {

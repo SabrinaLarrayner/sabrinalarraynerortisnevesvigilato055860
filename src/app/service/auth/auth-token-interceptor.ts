@@ -1,17 +1,19 @@
 import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { AuthFacade } from './auth.facade';
 
 export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
-  const token = localStorage.getItem('access_token');
-  if (req.url.includes('/autenticacao/refresh')) {
-    return next(req);
-  }
+  const authFacade = inject(AuthFacade);
+
+  const token = authFacade.getAccessToken();
+
   if (token) {
-    const cloned = req.clone({
+    req = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`
       }
     });
-    return next(cloned);
   }
+
   return next(req);
 };

@@ -15,12 +15,8 @@ export class App implements OnInit {
   public authFacade = inject(AuthFacade);
   private router = inject(Router);
 
-// No seu app.ts
 ngOnInit() {
   const token = localStorage.getItem('access_token');
-  
-  // SÓ chama se houver token. Se estiver no login, o token é null, 
-  // então essa linha NUNCA será executada.
   if (token) {
     this.authFacade.checkApiHealth();
   }

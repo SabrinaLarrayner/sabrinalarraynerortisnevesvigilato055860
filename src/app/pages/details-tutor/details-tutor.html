@@ -20,7 +20,7 @@
     <div class="flex flex-col md:flex-row items-center md:items-start gap-6">
       <div
         class="w-24 h-24 bg-white/20 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden border-2 border-white/30 shadow-inner">
-        @if (tutor.foto?.url) {
+        @if (tutor.foto.url) {
         <img [src]="tutor.foto.url" class="w-full h-full object-cover">
         } @else {
         <span class="text-4xl font-bold uppercase">{{ (tutor.nome || '?').charAt(0) }}</span>
@@ -60,7 +60,7 @@
         <div class="flex items-center gap-4">
           <div
             class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center overflow-hidden border border-purple-100">
-            @if (pet.foto?.url) {
+            @if (pet.foto.url) {
             <img [src]="pet.foto.url" class="w-full h-full object-cover">
             } @else {
             <mat-icon class="text-purple-200">pets</mat-icon>

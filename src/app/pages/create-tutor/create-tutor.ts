@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } 
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
-
 import { Card } from '../../components/card/card';
 import { Button } from '../../components/button/button';
 import { InputField } from '../../components/input-field/input-field';
@@ -14,12 +13,12 @@ import { validateCpf } from '../../utils/cpf-validator/cpf-validator';
 @Component({
   selector: 'app-create-tutor',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatIconModule, Card, Button, InputField, NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule, MatIconModule, Card, Button, InputField, /* NgxMaskDirective */],
   providers: [provideNgxMask()],
   templateUrl: './create-tutor.html',
 })
 export class CreateTutor {
-  private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder); 
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 

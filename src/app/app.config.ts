@@ -4,6 +4,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { provideNgxMask } from 'ngx-mask';
+
 import { authTokenInterceptor } from './service/auth/auth-token-interceptor';
 import { authRefreshInterceptor } from './service/auth/auth-refresh-interceptor';
 
@@ -13,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([
-        authTokenInterceptor,    
+        authTokenInterceptor,
         authRefreshInterceptor
       ])
     ),

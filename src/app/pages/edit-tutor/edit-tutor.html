@@ -13,7 +13,7 @@
 
     <div class="relative h-64 w-full bg-purple-100 rounded-[32px] overflow-hidden shadow-sm mb-10">
       @if (facade.tutorSelected$ | async; as tutor) {
-      <img [src]="tutor.foto?.url || 'assets/placeholder-tutor.png'" class="w-full h-full object-cover opacity-60">
+      <img [src]="tutor.foto.url || 'assets/placeholder-tutor.png'" class="w-full h-full object-cover opacity-60">
 
       <div class="absolute inset-0 bg-gradient-to-t from-purple-900/60 to-transparent"></div>
 
@@ -26,7 +26,7 @@
 
         <app-button label="Trocar imagem" (click)="triggerFileInput(fileInput)"></app-button>
 
-        @if (tutor.foto?.url) {
+        @if (tutor.foto.url) {
         <app-button label="Excluir imagem"
           (click)="showDeleteImgModal = true"></app-button>
         }

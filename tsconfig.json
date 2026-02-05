@@ -1,8 +1,13 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "types": ["vitest/globals"],
+    "baseUrl": "./",
+"paths": {
+      "zone.js": ["node_modules/zone.js"],
+      "zone.js/testing": ["node_modules/zone.js/fesm2015/zone-testing.bundle.js"],
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
