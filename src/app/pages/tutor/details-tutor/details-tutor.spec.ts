@@ -2,11 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailsTutor } from './details-tutor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { PetFacade } from '../../service/pet/pet.facade';
-import { tutorAndPet } from '../../service/tutors-and-pets/tutors-and-pet.facade';
+
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TutorFacade } from '@services/tutor/tutor.facade';
+import { PetFacade } from '@services/pet/pet.facade';
+import { tutorAndPet } from '@services/tutors-and-pets/tutors-and-pet.facade';
 
 describe('DetailsTutor', () => {
   let component: DetailsTutor;

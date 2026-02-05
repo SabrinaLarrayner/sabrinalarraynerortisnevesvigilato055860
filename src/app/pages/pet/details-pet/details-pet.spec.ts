@@ -4,10 +4,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, ActivatedRoute } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
-import { PetFacade } from '../../service/pet/pet.facade';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Router } from '@angular/router';
+import { PetFacade } from '@services/pet/pet.facade';
 
 describe('DetailsPet (Vitest)', () => {
   let component: DetailsPet;

@@ -1,0 +1,5 @@
+services:
+  guardiao-pet:
+    build: .
+    ports:
+      - "7000:7000"

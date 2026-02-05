@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPet } from './edit-pet';
-import { PetFacade } from '../../service/pet/pet.facade';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
 import { provideNgxMask } from 'ngx-mask';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { PetFacade } from '@services/pet/pet.facade';
 
 describe('EditPet', () => {
   let component: EditPet;

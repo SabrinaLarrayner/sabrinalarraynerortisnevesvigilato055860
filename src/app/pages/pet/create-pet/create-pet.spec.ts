@@ -5,9 +5,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { PetFacade } from '../../service/pet/pet.facade';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { provideEnvironmentNgxMask } from 'ngx-mask';
+import { PetFacade } from '@services/pet/pet.facade';
 
 describe('CLEA (Vitest)', () => {
   let component: CreatePet;

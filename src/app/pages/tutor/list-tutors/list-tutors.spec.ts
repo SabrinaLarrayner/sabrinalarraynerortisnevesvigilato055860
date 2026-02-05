@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListTutors } from './list-tutors';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { vi } from 'vitest';
 import { provideNgxMask } from 'ngx-mask';
+import { TutorFacade } from '@services/tutor/tutor.facade';
 
 describe('ListTutors', () => {
   let component: ListTutors;

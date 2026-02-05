@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListPets } from './list-pets';
-import { PetFacade } from '../../service/pet/pet.facade';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { vi } from 'vitest';
 import { provideNgxMask } from 'ngx-mask';
+import { PetFacade } from '@services/pet/pet.facade';
 
 describe('ListPets', () => {
   let component: ListPets;

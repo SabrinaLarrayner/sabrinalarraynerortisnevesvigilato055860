@@ -6,8 +6,8 @@ import { provideRouter, Router } from '@angular/router';
 import { provideNgxMask } from 'ngx-mask';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { of } from 'rxjs';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TutorFacade } from '@services/tutor/tutor.facade';
 
 describe('CreateTutor (Vitest)', () => {
   let component: CreateTutor;

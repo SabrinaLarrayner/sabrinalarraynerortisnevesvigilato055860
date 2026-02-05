@@ -1,15 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-// 1. Importe a função diretamente, não o namespace
-import { validateCpf } from '../../utils/cpf-validator/cpf-validator'; 
 import { EditTutor } from './edit-tutor';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { IdDeletPhotoTutor } from '../../service/tutor/id-delete-photo-tutor';
-import { IdPhotoTutor } from '../../service/tutor/id-photo-tutor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
 import { provideNgxMask } from 'ngx-mask';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { TutorFacade } from '@services/tutor/tutor.facade';
+import { IdDeletPhotoTutor } from '@services/tutor/id-delete-photo-tutor';
+import { IdPhotoTutor } from '@services/tutor/id-photo-tutor';
 
 vi.mock('../../utils/cpf-validator/cpf-validator', () => ({
   validateCpf: vi.fn()
