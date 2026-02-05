@@ -1,51 +1,44 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
+  ReactiveFormsModule,
   FormControl
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { provideNgxMask } from 'ngx-mask';
-
-import { Card } from '../../components/card/card';
-import { Button } from '../../components/button/button';
-import { InputField } from '../../components/input-field/input-field';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { validateCpf } from '../../utils/cpf-validator/cpf-validator';
+import { Router } from '@angular/router';
+import { Button } from 'src/app/components/button/button';
+import { InputField } from 'src/app/components/input-field/input-field';
+import { Card } from 'src/app/components/card/card';
+import { PetFacade } from 'src/app/service/pet/pet.facade';
 
 @Component({
-  selector: 'app-create-tutor',
+  selector: 'app-create-pet',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
     MatIconModule,
-    Card,
     Button,
-    InputField
+    InputField,
+    Card
   ],
-  providers: [provideNgxMask()],
-  templateUrl: './create-tutor.html',
+  templateUrl: './create-pet.html',
 })
-export class CreateTutor {
+export class CreatePet {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-
-  public facade = inject(TutorFacade);
+  public facade = inject(PetFacade);
 
   photoPreview: string | null = null;
 
   form: FormGroup = this.fb.group({
     nome: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
-    telefone: ['', [Validators.required]],
-    endereco: [''],
-    cpf: [null, [Validators.required, validateCpf()]],
+    idade: [null, [Validators.required, Validators.min(0)]],
+    raca: ['', [Validators.required]],
     photo: [null, Validators.required]
   });
 
@@ -53,20 +46,12 @@ export class CreateTutor {
     return this.form.get('nome') as FormControl;
   }
 
-  get emailControl(): FormControl {
-    return this.form.get('email') as FormControl;
+  get idadeControl(): FormControl {
+    return this.form.get('idade') as FormControl;
   }
 
-  get telefoneControl(): FormControl {
-    return this.form.get('telefone') as FormControl;
-  }
-
-  get enderecoControl(): FormControl {
-    return this.form.get('endereco') as FormControl;
-  }
-
-  get cpfControl(): FormControl {
-    return this.form.get('cpf') as FormControl;
+  get racaControl(): FormControl {
+    return this.form.get('raca') as FormControl;
   }
 
   get photoControl(): FormControl {
@@ -96,21 +81,31 @@ export class CreateTutor {
     this.photoControl.updateValueAndValidity();
   }
 
+  // Submit
   onSubmit(): void {
+    console.log('submit acionado');
+
     if (!this.form.valid) {
       console.warn('form inválido');
       this.form.markAllAsTouched();
       return;
     }
+
     const formValue = this.form.getRawValue();
     const photoFile: File = formValue.photo;
+
     this.facade.createWithPhoto(formValue, photoFile).subscribe({
-      next: () => this.router.navigate(['/list-tutors']),
-      error: (err) => console.error('Error during tutor registration:', err)
+      next: () => this.router.navigate(['/list-pets']),
+      error: (err) => console.error('Error creating pet:', err)
     });
   }
 
+  getYearsLabel(): string {
+    const value = this.idadeControl.value;
+    return value > 1 ? 'Idade (anos)' : 'Idade (ano)';
+  }
+
   cancel(): void {
-    this.router.navigate(['/list-tutors']);
+    this.router.navigate(['/list-pets']);
   }
 }

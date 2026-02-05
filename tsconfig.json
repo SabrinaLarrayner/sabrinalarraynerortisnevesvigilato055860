@@ -1,12 +1,54 @@
+// {
+//   "compileOnSave": false,
+//   "compilerOptions": {
+//     "moduleResolution": "bundler",
+//     "types": ["vitest/globals"],
+//     "baseUrl": "./",
+// "paths": {
+//       "zone.js": ["node_modules/zone.js"],
+//       "zone.js/testing": ["node_modules/zone.js/fesm2015/zone-testing.bundle.js"],
+//     },
+//     "strict": true,
+//     "noImplicitOverride": true,
+//     "noPropertyAccessFromIndexSignature": true,
+//     "noImplicitReturns": true,
+//     "noFallthroughCasesInSwitch": true,
+//     "skipLibCheck": true,
+//     "isolatedModules": true,
+//     "experimentalDecorators": true,
+//     "importHelpers": true,
+//     "target": "ES2022",
+//     "module": "preserve"
+//   },
+//   "angularCompilerOptions": {
+//     "enableI18nLegacyMessageIdFormat": false,
+//     "strictInjectionParameters": true,
+//     "strictInputAccessModifiers": true,
+//     "strictTemplates": true
+//   },
+//   "files": [],
+//   "references": [
+//     {
+//       "path": "./tsconfig.app.json"
+//     },
+//     {
+//       "path": "./tsconfig.spec.json"
+//     }
+//   ]
+// }
 {
   "compileOnSave": false,
   "compilerOptions": {
     "moduleResolution": "bundler",
     "types": ["vitest/globals"],
     "baseUrl": "./",
-"paths": {
+    "paths": {
+      "@services/*": ["src/app/service/*"],
+      "@pages/*": ["src/app/pages/*"],
+      "@components/*": ["src/app/components/*"],
+      "@utils/*": ["src/app/utils/*"],
       "zone.js": ["node_modules/zone.js"],
-      "zone.js/testing": ["node_modules/zone.js/fesm2015/zone-testing.bundle.js"],
+      "zone.js/testing": ["node_modules/zone.js/fesm2015/zone-testing.bundle.js"]
     },
     "strict": true,
     "noImplicitOverride": true,
@@ -28,11 +70,7 @@
   },
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    }
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.spec.json" }
   ]
 }

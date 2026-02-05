@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { InputField } from '../../components/input-field/input-field';
-import { Button } from '../../components/button/button';
-import { IdDeletPhotoTutor } from '../../service/tutor/id-delete-photo-tutor';
-import { IdPhotoTutor } from '../../service/tutor/id-photo-tutor';
-import { validateCpf } from '../../utils/cpf-validator/cpf-validator';
+import { Button } from 'src/app/components/button/button';
+import { InputField } from 'src/app/components/input-field/input-field';
+import { IdDeletPhotoTutor } from 'src/app/service/tutor/id-delete-photo-tutor';
+import { IdPhotoTutor } from 'src/app/service/tutor/id-photo-tutor';
+import { TutorFacade } from 'src/app/service/tutor/tutor.facade';
+import { validateCpf } from 'src/app/utils/cpf-validator/cpf-validator';
 
 @Component({
   selector: 'app-edit-tutor',

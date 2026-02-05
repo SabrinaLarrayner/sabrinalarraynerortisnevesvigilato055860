@@ -1,7 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { PetFacade } from './pet.facade';
 import { PetsService } from './pets';
-import { CreatePets } from './create-pets';
 import { IdPhotoPets } from './id-photo-pets';
 import { IdPet } from './id-pet';
 import { IdPetDelete } from './id-pet-delete';
@@ -9,10 +7,10 @@ import { PetEdit } from './pet-edit';
 import { of } from 'rxjs';
 import { vi } from 'vitest';
 import { PetDeleteImg } from './pet-delete-img';
-
+import { PetFacade } from '../../service/pet/pet.facade';
+import { CreatePets } from './create-pets';
 describe('PetFacade', () => {
   let facade: PetFacade;
-
   let petsServiceMock: any;
   let idPetServiceMock: any;
   let createServiceMock: any;
@@ -122,7 +120,7 @@ describe('PetFacade', () => {
   });
   it('deve limpar o estado ao chamar clearState', () => {
     facade.clearState();
-    
+
     facade.pets$.subscribe(pets => expect(pets).toEqual([]));
     facade.petSelected$.subscribe(selected => expect(selected).toBeNull());
     facade.loading$.subscribe(loading => expect(loading).toBe(false));

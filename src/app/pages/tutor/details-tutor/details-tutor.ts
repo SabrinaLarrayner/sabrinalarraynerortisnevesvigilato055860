@@ -4,12 +4,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, map, Observable } from 'rxjs';
-import { Card } from '../../components/card/card';
-import { Button } from '../../components/button/button';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { tutorAndPet } from '../../service/tutors-and-pets/tutors-and-pet.facade';
-import { PetFacade } from '../../service/pet/pet.facade';
-import { FormatPipe } from '../../utils/regex/regex';
+import { Card } from 'src/app/components/card/card';
+import { Button } from 'src/app/components/button/button';
+import { FormatPipe } from 'src/app/utils/regex/regex';
+import { TutorFacade } from 'src/app/service/tutor/tutor.facade';
+import { PetFacade } from 'src/app/service/pet/pet.facade';
+import { tutorAndPet } from 'src/app/service/tutors-and-pets/tutors-and-pet.facade';
 
 @Component({
   selector: 'app-details-tutor',

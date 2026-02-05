@@ -5,16 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Router } from '@angular/router';
-
-import { InputField } from '../../components/input-field/input-field';
-import { Button } from '../../components/button/button';
-import { Card } from '../../components/card/card';
-import { LayoutToggleView } from '../../layout/layout-toggle-view/layout-toggle-view';
-import { TutorFacade } from '../../service/tutor/tutor.facade';
-import { FormatPipe } from '../../utils/regex/regex';
+import { PetFacade } from 'src/app/service/pet/pet.facade';
+import { LayoutToggleView } from 'src/app/layout/layout-toggle-view/layout-toggle-view';
+import { Card } from 'src/app/components/card/card';
+import { Button } from 'src/app/components/button/button';
+import { InputField } from 'src/app/components/input-field/input-field';
 
 @Component({
-  selector: 'app-list-tutors',
+  selector: 'app-list-pets',
   standalone: true,
   imports: [
     CommonModule,
@@ -24,18 +22,13 @@ import { FormatPipe } from '../../utils/regex/regex';
     InputField,
     Button,
     Card,
-    LayoutToggleView,
-    FormatPipe
+    LayoutToggleView
   ],
-  templateUrl: './list-tutors.html',
+  templateUrl: './list-pets.html',
 })
-export class ListTutors implements OnInit, OnDestroy {
-  private facade = inject(TutorFacade);
+export class ListPets implements OnInit, OnDestroy {
+  public facade = inject(PetFacade);
   private router = inject(Router);
-
-  tutorsList$ = this.facade.tutorsList$;
-  loading$ = this.facade.loading$;
-
   private destroy$ = new Subject<void>();
 
   currentPage = 0;
@@ -43,14 +36,15 @@ export class ListTutors implements OnInit, OnDestroy {
   searchControl = new FormControl('');
 
   ngOnInit(): void {
-    this.loadTutors();
+    this.loadPets();
+
     this.searchControl.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
       takeUntil(this.destroy$)
     ).subscribe(() => {
       this.currentPage = 0;
-      this.loadTutors();
+      this.loadPets();
     });
   }
 
@@ -60,23 +54,27 @@ export class ListTutors implements OnInit, OnDestroy {
     this.facade.clearState();
   }
 
-  loadTutors(): void {
-    const name = this.searchControl.value?.trim() || '';
-    this.facade.listAll(this.currentPage, this.pageSize, name);
+  loadPets(): void {
+    const search = this.searchControl.value || '';
+    this.facade.listAll(this.currentPage, this.pageSize, search);
   }
 
   handlePageEvent(e: PageEvent): void {
     this.currentPage = e.pageIndex;
     this.pageSize = e.pageSize;
-    this.loadTutors();
+    this.loadPets();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   navigateToCreate(): void {
-    this.router.navigate(['/create-tutor']);
+    this.router.navigate(['/create-pet']);
   }
 
-  public detailsTutors(id: number): void {
-    this.router.navigate(['/details-tutor', id]);
+  detailsPet(id: number): void {
+    this.router.navigate(['/details-pet', id]);
+  }
+
+  yearsPlural(age: number): string {
+    return age > 1 ? 'anos' : 'ano';
   }
 }
