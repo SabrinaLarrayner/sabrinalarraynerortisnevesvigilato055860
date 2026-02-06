@@ -59,8 +59,11 @@ src/
    ```
 2. **Iniciar servidor de desenvolvimento:**
    ```bash
-   npm start
+   ng serve
    ```
+
+   **Port:** http://localhost:4200/login
+
 
 ---
 
