@@ -122,6 +122,18 @@ A aplicação utiliza o padrão Facade dentro do diretório service/ para gerenc
 | Tutores | Edição | `/details-tutor/:id/edit` |
 
 
+## Decisões Técnicas
+
+As escolhas abaixo visam performance, manutenibilidade e padrões modernos de engenharia:
+
+* **Angular 21 (Standalone):** Arquitetura moderna sem `NgModules`, reduzindo a complexidade e otimizando o carregamento via *Tree Shaking*.
+* **Facade Pattern (Signals + RxJS):** * **Signals:** Gerenciamento de estado da UI com alta performance e reatividade granular.
+    * **RxJS:** Controle de fluxos assíncronos e integração robusta com a API.
+* **Vitest:** Substituição do Karma/Jasmine por uma solução de testes unitários significativamente mais rápida em ambiente.
+* **Tailwind CSS:** Desenvolvimento ágil de interfaces responsivas e utilitárias, mantendo o bundle final leve.
+* **Docker:** Pipeline de deploy otimizado. Build em **Node 22** e entrega via **Nginx Alpine**, garantindo uma imagem leve e segura.
+* **Lazy Loading:** Implementado nas rotas principais para reduzir o tempo de carregamento inicial (LCP).
+
 ### CHECKLIST DE ENTREGA - PROJETO SEPLAG (PET MANAGER)
 
 - Requisitos Gerais e Arquitetura
