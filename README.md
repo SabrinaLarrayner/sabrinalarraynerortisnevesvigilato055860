@@ -12,7 +12,7 @@
 
 ### Stack Técnica
 - **Framework:** Angular 21 (Standalone Components)
-- **Gerenciamento de Estado:** RxJS e Angular Signals / Facade Pattern
+- **Gerenciamento de Estado:** RxJS (BehaviorSubject) e Angular Signals
 - **Estilização:** Tailwind CSS
 - **Ícones:** Angular Material Icons
 - **Testes:** Vitest
@@ -37,6 +37,15 @@ src/
 ```
 
 ---
+#### Ambiente Docker (Produção)
+1. **Iniciar containers:**
+   ```bash
+   docker compose up -d
+   ```
+2. **Encerrar containers:**
+   ```bash
+   docker compose down
+   ```
 
 ### Instruções para Execução
 
@@ -48,16 +57,6 @@ src/
 2. **Iniciar servidor de desenvolvimento:**
    ```bash
    npm start
-   ```
-
-#### Ambiente Docker (Produção)
-1. **Iniciar containers:**
-   ```bash
-   docker compose up -d
-   ```
-2. **Encerrar containers:**
-   ```bash
-   docker compose down
    ```
 
 ---
@@ -92,6 +91,15 @@ A escolha pelo **Vitest** em substituição ao Karma/Jasmine visa ganho de perfo
 - **Mock de APIs do Navegador:** Utilização de `vi.stubGlobal` para simular comportamentos de classes nativas como `FileReader` em testes de upload.
 - **Validação de Formulários:** Injeção de mocks diretamente nos controles via `setValidators` para isolar a lógica de componentes de serviços externos.
 - **Sincronia e Ciclo de Vida:** Substituição do `fakeAsync` por padrões `async/await` controlados, garantindo que as máscaras de entrada (`ngx-mask`) sejam processadas antes das asserções.
+
+---
+
+### Camada de Serviço e Padrão Facade
+A aplicação utiliza o padrão Facade dentro do diretório service/ para gerenciar a complexidade das interações com a API.
+
+- **Gerenciamento de Estado:** Utiliza BehaviorSubject para controlar o estado reativo da aplicação, como a lista de dados, o item selecionado e o status de carregamento (loading), garantindo que a interface sempre tenha o valor mais atualizado.
+- **Simplificação:** As Facades abstraem as chamadas de múltiplos serviços e o gerenciamento de estado (RxJS), entregando para os componentes apenas os dados e métodos necessários.
+- **Desacoplamento:** Reduz a dependência direta dos componentes em relação à lógica de infraestrutura de rede.
 
 ---
 
