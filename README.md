@@ -38,6 +38,7 @@ src/
 
 ---
 #### Ambiente Docker (Produção)
+
 1. **Iniciar containers:**
    ```bash
    docker compose up -d
@@ -46,6 +47,8 @@ src/
    ```bash
    docker compose down
    ```
+
+**Port:** http://localhost:7000/login
 
 ### Instruções para Execução
 
