@@ -19,7 +19,6 @@ describe('IdTutor', () => {
   });
 
   afterEach(() => {
-    // Verifica se não há requisições abertas/pendentes
     httpMock.verify();
   });
 
@@ -64,12 +63,8 @@ describe('IdTutor', () => {
       expect(res.pets[0].nome).toBe('Rex');
     });
 
-    // Valida a URL: /tutores/{id}
     const req = httpMock.expectOne(`${environment.api_url}/tutores/${tutorId}`);
-    
     expect(req.request.method).toBe('GET');
-
-    // Responde com os dados mockados
     req.flush(mockResponse);
   });
 

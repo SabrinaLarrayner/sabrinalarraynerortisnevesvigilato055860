@@ -97,7 +97,6 @@ export class CreateTutor {
 
   onSubmit(): void {
     if (!this.form.valid) {
-      console.warn('form inválido');
       this.form.markAllAsTouched();
       return;
     }

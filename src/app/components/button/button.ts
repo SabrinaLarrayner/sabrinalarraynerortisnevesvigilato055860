@@ -17,12 +17,6 @@ export class Button {
   @Input() type: 'button' | 'submit' = 'button'; 
   @Output() onClick = new EventEmitter<void>();
   handlePress() {
-    console.log('Botão clicado!', { 
-      type: this.type, 
-      disabled: this.disabled, 
-      variant: this.variant 
-    });
-  
     if (!this.disabled) {
       this.onClick.emit();
     }

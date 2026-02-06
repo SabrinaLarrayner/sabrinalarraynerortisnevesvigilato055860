@@ -34,7 +34,6 @@ export interface TutorResponse {
 })
 export class IdTutor {
   private http = inject(HttpClient);
-  // Seguindo o padrão: base_url + /tutores
   private readonly API_URL = `${environment.api_url}/tutores`;
 
   execute(id: number): Observable<TutorResponse> {

@@ -80,8 +80,7 @@ export class CreatePet {
     this.photoControl.markAsTouched();
     this.photoControl.updateValueAndValidity();
   }
-
-  // Submit
+  
   onSubmit(): void {
     console.log('submit acionado');
 
