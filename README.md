@@ -120,3 +120,68 @@ A aplicação utiliza o padrão Facade dentro do diretório service/ para gerenc
 | Tutores | Listagem | `/list-tutors` |
 | Tutores | Cadastro | `/create-tutor` |
 | Tutores | Edição | `/details-tutor/:id/edit` |
+
+
+### CHECKLIST DE ENTREGA - PROJETO SEPLAG (PET MANAGER)
+
+- Requisitos Gerais e Arquitetura
+[x] Framework: Implementação em Angular 21 (Standalone Components).
+
+[x] Linguagem: TypeScript com tipagem estrita.
+
+[x] Estilização: Layout responsivo utilizando Tailwind CSS.
+
+[x] Consumo de API: Requisições em tempo real via HttpClient.
+
+[x] Rotas: Implementação de Lazy Loading para os módulos de Pets e Tutores.
+
+[x] Performance: Paginação de 10 itens por página implementada.
+
+[x] Organização: Componentização seguindo boas práticas e Clean Code.
+
+- Funcionalidades: Pets
+[x] Listagem (Home): Exibição em cards com nome, espécie e idade.
+
+[x] Busca: Filtro por nome funcional.
+
+[x] Detalhamento: Página de detalhes (GET /v1/pets/{id}) com destaque ao nome do pet.
+
+[x] Tutor Vinculado: Exibição dos dados do tutor dentro da tela do pet.
+
+[x] CRUD: Cadastro e edição de pets funcionando (POST e PUT).
+
+[x] Mídia: Upload de fotos para os pets.
+
+- Funcionalidades: Tutores
+[x] CRUD: Cadastro e atualização de tutores com campos de endereço e contato.
+
+[x] Máscaras: Aplicação de máscaras em campos sensíveis (Telefone).
+
+[x] Vínculos:
+
+[x] Listagem de pets vinculados ao tutor.
+
+[x] Funcionalidade de vincular novo pet.
+
+[x] Funcionalidade de remover vínculo (desvincular).
+
+- Segurança
+[x] Autenticação: Sistema de login com persistência de token JWT.
+
+[x] Token Refresh: Gerenciamento de expiração de sessão.
+
+[x] Arquitetura Sênior: Implementação do Padrão Facade para separação de preocupações.
+
+[x] Gerenciamento de Estado: Uso de BehaviorSubject (RxJS) e Angular Signals para reatividade.
+
+[x] Testes: Cobertura de testes unitários utilizando Vitest.
+
+- Entrega e DevOps
+
+[x] Docker: Artefato empacotado em container (Node 22 LTS / Nginx Alpine).
+
+[x] Documentação: README.md completo com instruções de execução e arquitetura.
+
+[x] Git: Histórico de commits.
+
+
